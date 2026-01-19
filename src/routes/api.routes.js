@@ -4,7 +4,8 @@ import {
     getExplorerContent, 
     playMovie, 
     searchTMDBOptions, 
-    fixMatch 
+    fixMatch, 
+    getMovieDetails
 } from '../controllers/browse.controller.js';
 
 import { getStatus } from '../controllers/health.controller.js';
@@ -61,5 +62,8 @@ router.post('/settings', saveSettings);
 
 //Ruta para listar directorios (opcional).
 router.get('/config/list-dir', listDirectories);
+
+//Ruta para obtener detalles profundos de una película/serie por ID de TMDB.
+router.get('/movie-details', getMovieDetails);
 
 export default router;
