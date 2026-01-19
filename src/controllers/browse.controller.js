@@ -1,32 +1,42 @@
-import { getIndex } from '../services/indexer.service.js';
 import { exec } from 'child_process';
 import logger from '../config/logger.js';
-import axios from 'axios';
-import { TMDB_CONFIG } from '../config/constants.js';
 import { saveMapping, getMappings } from '../utils/storage.js';
 import { buildIndex } from '../services/indexer.service.js';
 
+// Cargamos el Token desde las variables de entorno
 const TMDB_TOKEN = process.env.TMDB_TOKEN;
 
-export const getExplorerContent = (req, res) => {
-    const { q } = req.query;
-    let results = getIndex();
-
-    if (q) {
-        results = results.filter(m => m.name.toLowerCase().includes(q.toLowerCase()));
+/**
+ * Obtiene el contenido de la biblioteca.
+ * Se cambió a async para poder reconstruir el índice dinámicamente
+ * basado en las rutas configuradas en settings.json.
+ */
+export const getExplorerContent = async (req, res) => {
+    try {
+        const results = await buildIndex();
+        // Forzamos que sea un array antes de enviarlo
+        res.json(Array.isArray(results) ? results : []);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json([]); // ENVIAR ARRAY VACÍO SIEMPRE
     }
-    res.json(results);
 };
 
-export const playMovie = (req, res) => {
+/**
+ * Lógica para reproducir el video en el reproductor predeterminado del sistema.
+ */
+export const playMovie = async (req, res) => {
     const { index } = req.body;
-    const movie = getIndex().find(m => m.index === index);
+    
+    // Obtenemos la lista actual para buscar el path del video
+    const movies = await buildIndex();
+    const movie = movies.find(m => m.index === index);
 
     if (!movie) return res.status(404).json({ error: "Video no encontrado" });
 
     logger.info(`🎬 Ejecutando: ${movie.path}`);
 
-    // Este comando es el más compatible con Windows para archivos con espacios
+    // Comando compatible con Windows para manejar espacios y caracteres especiales
     const command = `start "" "${movie.path}"`;
 
     exec(command, (err) => {
@@ -39,24 +49,24 @@ export const playMovie = (req, res) => {
     res.json({ message: "Reproduciendo..." });
 };
 
-// Buscar candidatos para que el usuario elija
-
+/**
+ * Busca candidatos en TMDB (Multi-search: Películas y Series)
+ */
 export const searchTMDBOptions = async (req, res) => {
     const { query } = req.query;
     console.log("📥 Servidor recibió query:", `"${query}"`);
     
     if (!query || query === "undefined" || query.trim() === "") {
-        console.log("⚠️ Query vacío o inválido, abortando...");
         return res.json([]);
     }
 
-    // const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&include_adult=false&language=es-ES`;
     const url = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(query)}&language=es-ES`;
+    
     const options = {
         method: 'GET',
         headers: {
             accept: 'application/json',
-            Authorization: `Bearer ${TMDB_TOKEN}` // Tu token seguro en el backend
+            Authorization: `Bearer ${TMDB_TOKEN}`
         }
     };
 
@@ -64,8 +74,6 @@ export const searchTMDBOptions = async (req, res) => {
         const response = await fetch(url, options);
         const data = await response.json();
 
-        console.log("Respuesta de TMDB:", data);
-        
         // Mapeamos los resultados para que el Modal los entienda
         const candidates = (data.results || []).slice(0, 9).map(item => ({
             id: item.id,
@@ -83,34 +91,22 @@ export const searchTMDBOptions = async (req, res) => {
     }
 };
 
-// export const searchTMDBOptions = async (req, res) => {
-//     const { query } = req.query;
-//     try {
-//         const response = await axios.get(`${TMDB_CONFIG.baseUrl}/search/multi`, {
-//             params: { api_key: TMDB_CONFIG.apiKey, 
-//                     query:query, 
-//                     language: 'es-ES' }
-//         });
-        
-//         const candidates = response.data.results.slice(0, 6).map(item => ({
-//             id: item.id,
-//             title: item.title || item.name,
-//             year: (item.release_date || item.first_air_date || "").split('-')[0],
-//             poster: item.poster_path ? `${TMDB_CONFIG.imageBaseUrl}${item.poster_path}` : null,
-//             type: item.media_type
-//         }));
-        
-//         res.json(candidates);
-//     } catch (error) {
-//         console.error("Error en búsqueda TMDB:", error.message);
-//         res.status(500).json([]);
-//     }
-// };
-
-// Guardar la elección del usuario
+/**
+ * Guarda la elección de poster del usuario en data.json
+ * y refresca el índice.
+ */
 export const fixMatch = async (req, res) => {
-    const { fileName, posterUrl } = req.body;
-    await saveMapping(fileName, { poster: posterUrl });
-    await buildIndex(); // Refrescamos el índice para que tome el nuevo poster
-    res.json({ message: "Poster actualizado correctamente" });
+    try {
+        const { fileName, posterUrl } = req.body;
+        // Guardamos en data.json usando nuestra utilidad storage.js
+        await saveMapping(fileName, posterUrl); 
+        
+        // Al ejecutar buildIndex() aquí, nos aseguramos de que el cambio sea persistente
+        await buildIndex(); 
+        
+        res.json({ message: "Poster actualizado correctamente" });
+    } catch (error) {
+        logger.error(`❌ Error en fixMatch: ${error.message}`);
+        res.status(500).json({ error: "No se pudo guardar la elección" });
+    }
 };

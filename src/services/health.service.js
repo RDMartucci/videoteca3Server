@@ -27,27 +27,3 @@ export const getSystemStatus = async () => {
     };
 };
 
-// export const getSystemStatus = async () => {
-//     const driveStatus = await Promise.all(
-//         PATHS_TO_INDEX.map(async (folderPath) => {
-//             try {
-//                 // Verificamos si la carpeta es accesible para lectura
-//                 await fs.access(folderPath, fs.constants.R_OK);
-//                 return { path: folderPath, status: "ONLINE" };
-//             } catch (error) {
-//                 logger.warn(`Disco desconectado o inaccesible: ${folderPath}`);
-//                 return { path: folderPath, status: "OFFLINE" };
-//             }
-//         })
-//     );
-
-//     const onlineCount = driveStatus.filter(d => d.status === "ONLINE").length;
-
-//     return {
-//         status: onlineCount === driveStatus.length ? "OK" : "WARNING",
-//         drives_online: onlineCount,
-//         total_drives: driveStatus.length,
-//         details: driveStatus,
-//         timestamp: new Date().toISOString()
-//     };
-// };

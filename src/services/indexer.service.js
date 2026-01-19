@@ -1,27 +1,25 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { PATHS_TO_INDEX, VIDEO_EXTENSIONS, TMDB_CONFIG } from '../config/constants.js';
+import { TMDB_CONFIG } from '../config/constants.js';
 import logger from '../config/logger.js';
 import axios from 'axios';
 import { cleanFileName } from '../utils/cleaner.js';
-import { getMappings } from '../utils/storage.js';
+import { getLibraryPaths, getMappings } from '../utils/storage.js';
+/**
+ * Busca el póster siguiendo la jerarquía: Manual (mappings) > Automático (TMDB)
+ */
+async function getPoster(fileName, mappings) {
+    // 1. Prioridad: ¿Ya lo elegimos manualmente? (Ya viene cargado en mappings)
+    if (mappings[fileName]) {
+        return mappings[fileName].poster || mappings[fileName]; 
+    }
 
-let globalIndex = [];
-
-
-
-async function getPoster(fileName) {
-    // 1. ¿Ya lo elegimos manualmente antes?
-    const savedData = await getMappings();
-    if (savedData[fileName]) return savedData[fileName].poster;
-    // 2. ¿Tenemos API Key de TMDB?
+    // 2. ¿Tenemos API Key para intentar búsqueda automática?
     if (!TMDB_CONFIG.apiKey) return null;
     
     try {
         const cleanName = cleanFileName(fileName);
-        
-        // Log para que veas en la consola si está limpiando o no
-        logger.info(`🔎 TMDB Query: [${cleanName}] (Original: ${fileName})`);
+        logger.info(`🔎 Búsqueda automática TMDB: [${cleanName}]`);
 
         const response = await axios.get(`${TMDB_CONFIG.baseUrl}/search/movie`, {
             params: { 
@@ -36,41 +34,61 @@ async function getPoster(fileName) {
             return posterPath ? `${TMDB_CONFIG.imageBaseUrl}${posterPath}` : null;
         }
     } catch (err) {
+        logger.error(`❌ Error automático TMDB para ${fileName}: ${err.message}`);
         return null;
     }
     return null;
 }
 
 export const buildIndex = async () => {
-    logger.info("🔍 Iniciando escaneo de medios...");
-    const newIndex = [];
+    try {
+        const paths = await getLibraryPaths();
+        const mappings = await getMappings(); // Cargamos data.json una sola vez
+        let allMovies = [];
+        let idCounter = 0;
 
-    for (const rootPath of PATHS_TO_INDEX) {
-        try {
-            const files = await fs.readdir(rootPath);
-            
-            for (const file of files) {
-                const ext = path.extname(file).toLowerCase();
-                if (VIDEO_EXTENSIONS.includes(ext)) {
-                    
-                    // Llamamos a getPoster pasando el nombre sucio
-                    const posterUrl = await getPoster(file);
+        if (!paths || paths.length === 0) return [];
 
-                    newIndex.push({
-                        name: file, // El nombre original para que se vea en la lista y VLC lo encuentre
-                        path: path.join(rootPath, file),
-                        category: path.basename(rootPath),
-                        poster: posterUrl,
-                        index: newIndex.length
-                    });
-                }
+        for (const folder of paths) {
+            try {
+                // Verificar acceso a la carpeta
+                await fs.access(folder);
+                const files = await fs.readdir(folder);
+
+                // Procesamos archivos en paralelo para mayor velocidad
+                const moviePromises = files.map(async (file) => {
+                    if (file.match(/\.(mp4|mkv|avi|mov)$/i)) {
+                        // Llamamos a getPoster pasando los mappings ya cargados
+                        const poster = await getPoster(file, mappings);
+
+                        return {
+                            index: 0, // Se reasignará después para mantener orden
+                            name: file,
+                            path: path.join(folder, file),
+                            poster: poster,
+                            category: path.basename(folder)
+                        };
+                    }
+                    return null;
+                });
+
+                const results = await Promise.all(moviePromises);
+                allMovies.push(...results.filter(m => m !== null));
+
+            } catch (e) {
+                logger.error(`⚠️ Omitiendo ruta inaccesible: ${folder}`);
             }
-        } catch (err) {
-            logger.error(`Error en ruta ${rootPath}: ${err.message}`);
         }
+
+        // Asignamos índices únicos finales
+        return allMovies.map((movie, i) => ({ ...movie, index: i }));
+
+    } catch (error) {
+        logger.error("❌ Error crítico en indexer service:", error);
+        return [];
     }
-    globalIndex = newIndex;
-    logger.info(`✅ Indexación lista: ${globalIndex.length} videos.`);
 };
 
-export const getIndex = () => globalIndex;
+// Mantenemos getIndex para compatibilidad con otros controladores
+export const getIndex = async () => await buildIndex();
+
