@@ -66,4 +66,8 @@ router.get('/config/list-dir', listDirectories);
 //Ruta para obtener detalles profundos de una película/serie por ID de TMDB.
 router.get('/movie-details', getMovieDetails);
 
+// Exportamos el router con todas las rutas definidas.
+router.get('/settings', getSettings);
+router.post('/settings', saveSettings);
+
 export default router;

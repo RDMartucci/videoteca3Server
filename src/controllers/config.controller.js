@@ -1,5 +1,5 @@
 import { getLibraryPaths, saveLibraryPaths } from '../utils/storage.js';
-import { buildIndex } from '../services/scanner.service.js';
+import { buildIndex } from '../services/indexer.service.js';
 import fs from 'fs/promises';
 import path from 'path';
 import { exec } from 'child_process';
