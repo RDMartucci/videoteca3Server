@@ -33,7 +33,7 @@ export const getHealth = async (req, res) => {
             details
         });
     } catch (error) {
-        res.json({ status: 'ERROR', drives_online: 0, total_drives: 0, details: [] });
+        res.status(500).json({ status: 'ERROR', drives_online: 0, total_drives: 0, details: [] });
     }
 };
 

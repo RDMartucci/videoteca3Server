@@ -21,7 +21,7 @@ export const getSettings = async (req, res) => {
 
 export const saveSettings = async (req, res) => {
     try {
-        const { paths } = req.body;
+        const paths = Array.isArray(req.body?.paths) ? req.body.paths : [];
         await fs.writeFile(SETTINGS_FILE, JSON.stringify({ paths }, null, 2));
         logger.info("⚙️ Indexando nuevas rutas...");
         const movies = await buildIndex(); 
@@ -41,12 +41,17 @@ export const getExplorerContent = async (req, res) => {
 };
 
 export const playMovie = async (req, res) => {
-    const { index } = req.body;
-    const movies = await buildIndex();
-    const movie = movies.find(m => m.index === index);
-    if (!movie) return res.status(404).json({ error: "Video no encontrado" });
-    exec(`start "" "${movie.path}"`);
-    res.json({ message: "Reproduciendo..." });
+    try {
+        const index = req.body?.index;
+        const movies = await buildIndex();
+        const movie = movies.find(m => m.index === index);
+        if (!movie) return res.status(404).json({ error: "Video no encontrado" });
+        exec(`start "" "${movie.path}"`);
+        res.json({ message: "Reproduciendo..." });
+    } catch (error) {
+        logger.error("Error en playMovie:", error);
+        res.status(500).json({ error: "No se pudo reproducir el video" });
+    }
 };
 
 // --- CORREGIDO: getMovieDetails con limpieza y manejo de errores ---
@@ -129,7 +134,10 @@ export const searchTMDBOptions = async (req, res) => {
 
 export const fixMatch = async (req, res) => {
     try {
-        const { fileName, posterUrl } = req.body;
+        const { fileName, posterUrl } = req.body || {};
+        if (!fileName || !posterUrl) {
+            return res.status(400).json({ error: "Faltan fileName o posterUrl" });
+        }
         await saveMapping(fileName, posterUrl); 
         await buildIndex(); 
         res.json({ message: "Poster actualizado correctamente" });

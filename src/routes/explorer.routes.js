@@ -1,4 +1,4 @@
-// backend/routes/explorer.routes.js
+// src/routes/explorer.routes.js
 import express from 'express';
 import { browseFolder } from '../controllers/explorer.controller.js';
 

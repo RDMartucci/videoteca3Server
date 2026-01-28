@@ -28,8 +28,6 @@ export const saveMapping = async (fileName, posterUrl) => {
 export const getLibraryPaths = async () => {
     try {
         const content = await fs.readFile(SETTINGS_PATH, 'utf-8');
-        console.log("Contenido de settings.json:", content);
-        
         const parsed = JSON.parse(content);
         return parsed.paths || [];
     } catch (e) {
