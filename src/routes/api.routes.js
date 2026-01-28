@@ -1,73 +1,72 @@
-import { Router } from 'express';
-// Agrupamos las importaciones por controlador para mayor claridad
-import { 
-    getExplorerContent, 
-    playMovie, 
-    searchTMDBOptions, 
-    fixMatch, 
-    getMovieDetails
-} from '../controllers/browse.controller.js';
+// src/routes/api.routes.js
+import express from 'express';
+const router = express.Router();
+import * as browseController from '../controllers/browse.controller.js';
+import { getHealth } from '../controllers/health.controller.js'; 
 
-import { getStatus } from '../controllers/health.controller.js';
-import { listDirectories, getSettings, saveSettings } from '../controllers/config.controller.js';
-
-const router = Router();
-
-// --- RUTAS DE NAVEGACIÓN Y VIDEOS ---
-/**
- * GET /api/browse
- * Obtiene la lista de películas escaneando dinámicamente las carpetas en settings.json
- */
-router.get('/browse', getExplorerContent);
-
-/**
- * POST /api/play
- * Abre el archivo de video en el reproductor del sistema (usa el index para buscar el path)
- */
-router.post('/play', playMovie);
-
-
-// --- RUTAS DE METADATOS (TMDB) ---
-/**
- * GET /api/search-tmdb
- * Consulta la API de TMDB para mostrar opciones al usuario en el modal de corrección
- */
-router.get('/search-tmdb', searchTMDBOptions);
-
-/**
- * POST /api/fix-match
- * Guarda el poster elegido por el usuario en data.json para persistencia manual
- */
-router.post('/fix-match', fixMatch);
-
-
-// --- RUTAS DE SISTEMA Y CONFIGURACIÓN ---
-/**
- * GET /api/health
- * Verifica si las rutas configuradas están online (accesibles) para el indicador del Navbar
- */
-router.get('/health', getStatus);
-
-/**
- * GET /api/settings
- * Devuelve el array de rutas actuales guardadas en settings.json
- */
-router.get('/settings', getSettings);
-
-/**
- * POST /api/settings
- * Guarda nuevas rutas de carpetas y dispara un re-escaneo automático
- */
-router.post('/settings', saveSettings);
-
-//Ruta para listar directorios (opcional).
-router.get('/config/list-dir', listDirectories);
-
-//Ruta para obtener detalles profundos de una película/serie por ID de TMDB.
-router.get('/movie-details', getMovieDetails);
-
-// Exportamos el router con todas las rutas definidas.
-router.get('/settings', getSettings);
-router.post('/settings', saveSettings);
+// Ruta para obtener la configuración actual.
+router.get('/settings', browseController.getSettings);
+// Ruta para guardar la configuración enviada desde el frontend.
+router.post('/settings', browseController.saveSettings);
+// Ruta para verificar el estado de salud del servidor.
+router.get('/health', getHealth);
+// Ruta para reproducir una película específica.
+router.post('/play', browseController.playMovie);
+// Ruta para corregir el mapeo manual de una película.
+router.post('/fix-match', browseController.fixMatch);
+// Ruta para buscar opciones en TMDB basadas en un título proporcionado.
+router.get('/search-tmdb', browseController.searchTMDBOptions);
+// POST /api/explorer/browse lo maneja explorer.routes.js (browseFolder); aquí solo biblioteca/scan.
+router.get('/movie-details', browseController.getMovieDetails);
+// Ruta para explorar el contenido de una carpeta específica.
+router.get('/browse', browseController.getExplorerContent);
+// Ruta para escanear las carpetas de la biblioteca.
+router.post('/scan', async (req, res) => {
+    try {
+        await browseController.getExplorerContent(req, res);
+    } catch (error) { 
+        res.status(500).json({ error: "Error durante el escaneo" });
+    }
+});
 
 export default router;
+
+/*************************************************************************************** */
+// import express from 'express';
+// const router = express.Router();
+// import * as browseController from '../controllers/browse.controller.js';
+// // Importamos el controlador de salud (asegúrate de tenerlo o créalo)
+// import { getHealth } from '../controllers/health.controller.js'; 
+
+// // Rutas de configuración y escaneo
+// router.get('/settings', browseController.getSettings);
+// router.post('/settings', browseController.saveSettings);
+
+// // ESTA ES LA RUTA QUE TE DA EL ERROR 404
+// router.post('/scan', async (req, res) => {
+//     try {
+//         await browseController.getExplorerContent(req, res);
+//     } catch (error) {
+//         res.status(500).json({ error: "Error durante el escaneo" });
+//     }
+// });
+
+// // Rutas de datos
+// router.get('/browse', browseController.getExplorerContent);
+// router.get('/health', getHealth); // Para que el tooltip no esté vacío
+// router.post('/play', browseController.playMovie);
+// router.get('/search-tmdb', browseController.searchTMDBOptions);
+// router.post('/fix-match', browseController.fixMatch);
+// router.get('/movie-details', async (req, res) => {
+//     try {
+//         const title = req.query.id; // Recibe "Alien Romulus"
+//         // Aquí deberías llamar a una función que busque en TMDB 
+//         // o devolver los datos que ya tengas.
+//         const details = await browseController.searchTMDBOptions(title); 
+//         res.json(details[0] || {}); // Devolvemos el primer resultado
+//     } catch (error) {
+//         res.status(500).json({ error: "Error al obtener detalles" });
+//     }
+// });
+
+// export default router;

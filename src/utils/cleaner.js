@@ -1,4 +1,4 @@
-// src/utils/cleaner.js
+// src/utils/cleaner.js (en servidor)
 /**
  * Limpia el nombre de un archivo para mejorar la búsqueda en TMDB
  */

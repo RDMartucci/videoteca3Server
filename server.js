@@ -1,3 +1,4 @@
+// // // server.js
 import 'dotenv/config';
 import app from './src/app.js';
 import logger from './src/config/logger.js';
@@ -6,17 +7,19 @@ import { startWatcher } from './src/services/watcher.service.js';
 
 const PORT = process.env.PORT || 5000;
 
-async function bootstrap() {
+async function server() {
     try {
         logger.info("🚀 Iniciando Servidor Videoteca...");
         
-        // 1. Indexación inicial
-        await buildIndex();
-        
-        // 2. Iniciar vigilancia de archivos
-        startWatcher();
+        // 1. Intentar indexación (si falla porque no hay rutas, no detiene el servidor)
+        try {
+            await buildIndex();
+            startWatcher();
+        } catch (e) {
+            logger.warn("⚠️ No se pudo indexar al inicio (posiblemente no hay rutas configuradas).");
+        }
 
-        // 3. Encender Express
+        // 2. Encender Express
         app.listen(PORT, () => {
             logger.info(`✅ Servidor corriendo en http://localhost:${PORT}`);
         });
@@ -26,4 +29,67 @@ async function bootstrap() {
     }
 }
 
-bootstrap();
+server();
+
+
+// import 'dotenv/config';
+// import app from './src/app.js';
+// import logger from './src/config/logger.js';
+// import { buildIndex } from './src/services/indexer.service.js';
+// import { startWatcher } from './src/services/watcher.service.js';
+
+// const PORT = process.env.PORT || 5000;
+
+// async function bootstrap() {
+//     try {
+//         logger.info("🚀 Iniciando Servidor Videoteca...");
+        
+//         // 1. Intentar indexación (si falla porque no hay rutas, no detiene el servidor)
+//         try {
+//             await buildIndex();
+//             startWatcher();
+//         } catch (e) {
+//             logger.warn("⚠️ No se pudo indexar al inicio (posiblemente no hay rutas configuradas).");
+//         }
+
+//         // 2. Encender Express
+//         app.listen(PORT, () => {
+//             logger.info(`✅ Servidor corriendo en http://localhost:${PORT}`);
+//         });
+//     } catch (error) {
+//         logger.error("❌ Error crítico al iniciar:", error);
+//         process.exit(1);
+//     }
+// }
+
+// bootstrap();
+
+// // import 'dotenv/config';
+// // import app from './src/app.js';
+// // import logger from './src/config/logger.js';
+// // import { buildIndex } from './src/services/indexer.service.js';
+// // import { startWatcher } from './src/services/watcher.service.js';
+
+// // const PORT = process.env.PORT || 5000;
+
+// // async function bootstrap() {
+// //     try {
+// //         logger.info("🚀 Iniciando Servidor Videoteca...");
+        
+// //         // 1. Indexación inicial
+// //         await buildIndex();
+        
+// //         // 2. Iniciar vigilancia de archivos
+// //         startWatcher();
+
+// //         // 3. Encender Express
+// //         app.listen(PORT, () => {
+// //             logger.info(`✅ Servidor corriendo en http://localhost:${PORT}`);
+// //         });
+// //     } catch (error) {
+// //         logger.error("❌ Error crítico al iniciar:", error);
+// //         process.exit(1);
+// //     }
+// // }
+
+// // bootstrap();
