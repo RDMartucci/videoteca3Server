@@ -1,4 +1,10 @@
-// // // // src/services/indexer.service.js (version mejorada con búsqueda automática de pósters)
+// src/services/indexer.service.js (version mejorada con búsqueda automática de pósters)
+//
+// Servicio de indexación de películas con búsqueda automática de pósters en TMDB
+// Si no se encuentra un mapeo manual, se intenta buscar el póster usando la API de TMDB
+// con un token de autenticación para mayor consistencia.
+//
+
 import fs from 'fs/promises';
 import path from 'path';
 import { TMDB_CONFIG } from '../config/constants.js';

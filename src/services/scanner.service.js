@@ -1,4 +1,14 @@
 // src/services/scanner.service.js
+//
+// Servicio encargado de escanear las carpetas configuradas por el usuario y 
+// construir un índice de películas disponibles, incluyendo la gestión de pósters manuales.
+// Utiliza las utilidades de almacenamiento para obtener las rutas y los mapeos de pósters.
+// Retorna un array de objetos con la información de cada película.
+// Cada objeto contiene: index, name, path, poster (si existe), category.
+// Maneja errores de acceso a carpetas y archivos de manera robusta.
+// Usa fs/promises para operaciones asíncronas con el sistema de archivos.
+//
+
 import fs from 'fs/promises';
 import path from 'path';
 import { getLibraryPaths, getMappings } from '../utils/storage.js';

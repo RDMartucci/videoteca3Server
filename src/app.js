@@ -1,4 +1,8 @@
 // src/app.js
+//
+// Configuración principal de la aplicación Express
+// Incluye middleware, rutas y manejo de errores
+//
 
 import express from 'express';
 import cors from 'cors';

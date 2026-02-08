@@ -1,4 +1,10 @@
 // src/config/constants.js
+/**************************************************************************************************
+ * Archivo de configuración de constantes globales para la aplicación.
+ * 
+ * Define rutas, extensiones de archivos de video soportados, y configuración de la API de TMDB.
+ *************************************************************************************************/
+
 import path from 'path';
 import dotenv from 'dotenv';
 dotenv.config();

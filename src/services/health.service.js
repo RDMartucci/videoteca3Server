@@ -1,3 +1,11 @@
+// src/services/health.service.js
+//
+// Servicio para verificar el estado físico de las rutas configuradas
+// en PATHS_TO_INDEX.
+// Utiliza fs.readdir para comprobar la accesibilidad de cada ruta.
+// Retorna un objeto con el estado general y detalles por ruta.
+//
+
 import fs from 'fs/promises';
 import { PATHS_TO_INDEX } from '../config/constants.js';
 import logger from '../config/logger.js';

@@ -1,4 +1,10 @@
 // src/controllers/browse.controller.js
+//
+// Este controlador maneja la lógica para obtener y guardar la configuración de rutas,
+// así como para obtener el contenido de la biblioteca, reproducir películas, 
+// buscar detalles en TMDB y corregir mapeos manuales.  
+/********************************************************************************************** */
+
 import { exec } from 'child_process';
 import logger from '../config/logger.js';
 import { saveMapping, getMappings } from '../utils/storage.js';

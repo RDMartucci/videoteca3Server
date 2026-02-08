@@ -1,4 +1,10 @@
 // //src/utils/storage.js
+//
+// Módulo para manejar el almacenamiento de mappings y configuraciones
+// utilizando el sistema de archivos.
+// Se unifican las rutas y se mejora la gestión de URLs completas.
+//
+
 import fs from 'fs/promises';
 import path from 'path';
 import dotenv from 'dotenv';

@@ -1,4 +1,16 @@
 // src/controllers/health.controller.js
+//
+// Controlador para el endpoint de salud del sistema.
+//
+// Verifica el estado de las rutas de almacenamiento definidas en settings.json
+// y devuelve un resumen del estado de las mismas.
+// Si no hay rutas definidas, devuelve un estado 'EMPTY'.
+// Si al menos una ruta está accesible, devuelve un estado 'OK'.
+// Si ninguna ruta está accesible, devuelve un estado 'EMPTY'.
+// En caso de error, devuelve un estado 'ERROR'.
+//
+/******************************************************************************************** */
+
 import fs from 'fs/promises';
 import path from 'path';
 

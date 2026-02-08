@@ -1,4 +1,10 @@
 // src/routes/api.routes.js
+//
+//
+// Rutas API para la gestión de la biblioteca de películas y exploración de carpetas.
+//
+/*************************************************************************************** */
+
 import express from 'express';
 const router = express.Router();
 import * as browseController from '../controllers/browse.controller.js';

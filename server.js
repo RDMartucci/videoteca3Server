@@ -1,4 +1,9 @@
 // // // server.js
+//
+// Punto de entrada del servidor Videoteca
+// Configura y arranca el servidor Express, maneja la indexación inicial y el watcher
+//
+
 import 'dotenv/config';
 import app from './src/app.js';
 import logger from './src/config/logger.js';

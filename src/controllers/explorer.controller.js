@@ -1,4 +1,10 @@
-// import express from 'express';
+// controllers/explorer.controller.js
+//
+// Este controlador maneja la lógica para explorar carpetas y listar su contenido, 
+//  así como para listar las unidades de disco en Windows.
+//
+/***************************************************************************************** */
+
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
@@ -13,7 +19,7 @@ const quickAccess = [
     { name: 'Escritorio', path: path.join(homeDir, 'Desktop'), icon: 'Monitor' }
 ];
 
-export const browseFolder = async (req, res) => {
+export const exploreFolder = async (req, res) => {
     try {
         const isWindows = os.platform() === 'win32';
         let folderPath = req.body.path;
@@ -90,7 +96,7 @@ export const browseFolder = async (req, res) => {
 //     { name: 'Escritorio', path: path.join(homeDir, 'Desktop'), icon: 'Monitor' }
 // ];
 
-// export const browseFolder = async (req, res) => {
+// export const exploreFolder = async (req, res) => {
 //     try {
 //         const isWindows = os.platform() === 'win32';
 //         let folderPath = req.body.path;

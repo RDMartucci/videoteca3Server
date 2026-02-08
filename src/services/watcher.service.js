@@ -1,3 +1,9 @@
+// src/services/watcher.service.js
+//
+// Servicio para vigilar cambios en las carpetas de películas y re-indexar
+// cuando se añaden o eliminan archivos.
+//
+
 import chokidar from 'chokidar';
 import logger from '../config/logger.js';
 import { buildIndex } from './indexer.service.js';
