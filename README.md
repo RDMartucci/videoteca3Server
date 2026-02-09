@@ -101,11 +101,13 @@ http://localhost:5000/api
 ### - Configuración
 
  GET /api/settings
+
  POST /api/settings
 
 ### - Biblioteca
 
  GET /api/browse
+
  POST /api/scan
 
 ### - Explorador de Carpetas
@@ -121,6 +123,7 @@ http://localhost:5000/api
 ### - The Movie DataBase (Obtener posters)
 
  GET /api/search-tmdb
+ 
  GET /api/movie-details
 
 ### - Fix Match (buscar poster manual)
