@@ -217,9 +217,10 @@ sequenceDiagram
 
 ## 📄 Documentación
 
-✔️POSTMAN_GUIA.md
+- POSTMAN_GUIA.md
 
-✔️swagger.yaml (OpenAPI 3.0).
+- swagger.yaml (OpenAPI 3.0).
 
+---
 
 
