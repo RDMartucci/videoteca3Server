@@ -141,6 +141,7 @@ logger.error("Error crítico", error);
 ---
 
 ## 🏛️ Architecture Diagram
+```mermaid
 flowchart LR
   FE[Frontend React + Vite]
   API[Express API]
@@ -166,7 +167,7 @@ flowchart LR
   API --> LOGGER
   CONTROLLERS --> LOGGER
   SERVICES --> LOGGER
-
+```
 ---
 
 ## 📌 Portfolio Highlights
