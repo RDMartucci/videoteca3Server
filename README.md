@@ -85,57 +85,62 @@ http://localhost:5000
 http://localhost:5000/api
 ```
 
-📚 Endpoints Principales
-Health Check
+## 📚 Endpoints Principales
+### Health Check
 
 GET /api/health
 
-Configuración
+### Configuración
 
 GET /api/settings
 POST /api/settings
 
-Biblioteca
+### Biblioteca
 
 GET /api/browse
 POST /api/scan
 
-Explorador de Carpetas
+### Explorador de Carpetas
 
 POST /api/explorer/browse
 
-Reproductor
+### Reproductor
 
 POST /api/play
 
-TMDB
+### TMDB
 
 GET /api/search-tmdb
 GET /api/movie-details
 
-Fix Match (poster manual)
+### Fix Match (poster manual)
 
 POST /api/fix-match
 
-🪵 Logging (Winston)
+---
+
+## 🪵 Logging (Winston)
 
 Logger centralizado con:
 
-Timestamp automático
+-Timestamp automático.
 
-Colores en consola
+-Colores en consola.
 
-Niveles: info, warn, error
+-Niveles: info, warn, error.
 
-Ejemplo:
+#### Ejemplo:
 
 ```bash
 logger.info("Servidor iniciado");
 logger.warn("No hay rutas configuradas");
 logger.error("Error crítico", error);
 ```
-## 🏛️ Architecture Diagram
 
+---
+
+## 🏛️ Architecture Diagram
+```bash
 flowchart LR
   FE[Frontend React + Vite]
   API[Express API]
@@ -161,8 +166,10 @@ flowchart LR
   API --> LOGGER
   CONTROLLERS --> LOGGER
   SERVICES --> LOGGER
+```
+---
 
-📌 Portfolio Highlights
+## 📌 Portfolio Highlights
 
 ✔️ Integración real con filesystem
 ✔️ Watcher en tiempo real
@@ -170,10 +177,12 @@ flowchart LR
 ✔️ Observabilidad con Winston
 ✔️ Arquitectura modular (routes/controllers/services)
 
-📄 Documentación
+---
 
-POSTMAN_GUIA.md
+## 📄 Documentación
 
-swagger.yaml (OpenAPI 3.0)
+✔️POSTMAN_GUIA.md
+✔️swagger.yaml (OpenAPI 3.0)
+
 
 
