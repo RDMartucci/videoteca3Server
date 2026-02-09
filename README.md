@@ -90,30 +90,33 @@ http://localhost:5000/api
 ###  - Health Check
 
 GET /api/health
+
 --
 ###  - Configuración
 
 GET /api/settings
 POST /api/settings
+
 --
 ###  - Biblioteca
 
 GET /api/browse
 POST /api/scan
+
 --
 ###  - Explorador de Carpetas
 
 POST /api/explorer/browse
-
+--
 ###  - Reproductor
 
 POST /api/play
-
+--
 ###  - TMDB
 
 GET /api/search-tmdb
 GET /api/movie-details
-
+--
 ###  - Fix Match (poster manual)
 
 POST /api/fix-match
