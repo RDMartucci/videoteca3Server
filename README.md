@@ -49,7 +49,10 @@ src/
 └── settings.json # Configuración persistida
 ```
 
+---
+
 server.js:
+
 - Arranca Express.
 - Ejecuta indexación inicial.
 - Inicia watcher de carpetas.
@@ -65,59 +68,60 @@ npm install
 ```
 
 #### Crear archivo .env:
+
 ```bash
 PORT=5000
 TMDB_TOKEN=TU_TOKEN_DE_TMDB
 ```
----
 
 #### ▶️ Ejecución
+
 ```bash
 npm start
 ```
 
 #### Servidor por defecto:
+
 ```bash
 http://localhost:5000
 ```
 
 #### 📡 Base URL
+
 ```bash
 http://localhost:5000/api
 ```
 
 ## 📚 Endpoints Principales
-###  - Health Check
+
+### - Health Check
 
 GET /api/health
 
---
-###  - Configuración
+### - Configuración
 
 GET /api/settings
 POST /api/settings
 
---
-###  - Biblioteca
+### - Biblioteca
 
 GET /api/browse
 POST /api/scan
 
---
-###  - Explorador de Carpetas
+### - Explorador de Carpetas
 
 POST /api/explorer/browse
---
-###  - Reproductor
+
+### - Reproductor
 
 POST /api/play
---
-###  - TMDB
+
+### - TMDB
 
 GET /api/search-tmdb
 GET /api/movie-details
---
-###  - Fix Match (poster manual)
+
+### - Fix Match (poster manual)
 
 POST /api/fix-match
 
