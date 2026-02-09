@@ -9,15 +9,15 @@ Incluye logging profesional con Winston, watcher de carpetas y arquitectura modu
 
 ## 🚀 Features
 
-- Indexación automática de carpetas de películas  
-- Explorador de sistema de archivos  
-- Biblioteca de películas indexadas  
-- Integración con TMDB (búsqueda y detalles)  
-- Reproducción local de videos  
-- Corrección manual de posters (fix match)  
-- Health check del servidor  
-- Watcher para detectar cambios en carpetas  
-- Logging centralizado con Winston  
+- Indexación automática de carpetas de películas.  
+- Explorador de sistema de archivos.  
+- Biblioteca de películas indexadas.  
+- Integración con TMDB (búsqueda y detalles).  
+- Reproducción local de videos.  
+- Corrección manual de posters (fix match).  
+- Health check del servidor.  
+- Watcher para detectar cambios en carpetas.  
+- Logging centralizado con Winston.  
 
 ---
 
@@ -50,9 +50,9 @@ src/
 ```
 
 server.js:
-- Arranca Express
-- Ejecuta indexación inicial
-- Inicia watcher de carpetas
+- Arranca Express.
+- Ejecuta indexación inicial.
+- Inicia watcher de carpetas.
 
 ---
 
@@ -141,7 +141,6 @@ logger.error("Error crítico", error);
 ---
 
 ## 🏛️ Architecture Diagram
-```bash
 flowchart LR
   FE[Frontend React + Vite]
   API[Express API]
@@ -167,23 +166,24 @@ flowchart LR
   API --> LOGGER
   CONTROLLERS --> LOGGER
   SERVICES --> LOGGER
-```
+
 ---
 
 ## 📌 Portfolio Highlights
 
-✔️ Integración real con filesystem
-✔️ Watcher en tiempo real
-✔️ Integración con API externa (TMDB)
-✔️ Observabilidad con Winston
-✔️ Arquitectura modular (routes/controllers/services)
+✔️ Integración real con filesystem.
+
+✔️ Watcher en tiempo real.
+✔️ Integración con API externa (TMDB).
+✔️ Observabilidad con Winston.
+✔️ Arquitectura modular (routes/controllers/services).
 
 ---
 
 ## 📄 Documentación
 
 ✔️POSTMAN_GUIA.md
-✔️swagger.yaml (OpenAPI 3.0)
+✔️swagger.yaml (OpenAPI 3.0).
 
 
 
