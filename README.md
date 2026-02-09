@@ -254,7 +254,7 @@ sequenceDiagram
   S-->>C: Processed data
   C-->>API: HTTP Response
   API-->>FE: JSON Response
-```
+``` 
 
 
 ---
