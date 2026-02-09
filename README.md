@@ -35,6 +35,7 @@ Incluye logging profesional con Winston, watcher de carpetas y arquitectura modu
 
 ## 🏗️ Arquitectura
 
+```bash
 src/
 ├── app.js # Configuración Express
 ├── routes/
@@ -46,7 +47,7 @@ src/
 │ └── logger.js # Winston logger
 └── data/
 └── settings.json # Configuración persistida
-
+```
 
 server.js:
 - Arranca Express
@@ -86,34 +87,34 @@ http://localhost:5000/api
 ```
 
 ## 📚 Endpoints Principales
-### Health Check
+###  - Health Check
 
 GET /api/health
 
-### Configuración
+###  - Configuración
 
 GET /api/settings
 POST /api/settings
 
-### Biblioteca
+###  - Biblioteca
 
 GET /api/browse
 POST /api/scan
 
-### Explorador de Carpetas
+###  - Explorador de Carpetas
 
 POST /api/explorer/browse
 
-### Reproductor
+###  - Reproductor
 
 POST /api/play
 
-### TMDB
+###  - TMDB
 
 GET /api/search-tmdb
 GET /api/movie-details
 
-### Fix Match (poster manual)
+###  - Fix Match (poster manual)
 
 POST /api/fix-match
 
@@ -123,11 +124,11 @@ POST /api/fix-match
 
 Logger centralizado con:
 
--Timestamp automático.
+- Timestamp automático.
 
--Colores en consola.
+- Colores en consola.
 
--Niveles: info, warn, error.
+- Niveles: info, warn, error.
 
 #### Ejemplo:
 
