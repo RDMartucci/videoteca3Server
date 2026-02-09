@@ -168,6 +168,95 @@ flowchart LR
   CONTROLLERS --> LOGGER
   SERVICES --> LOGGER
 ```
+
+#### 1️⃣ Diagrama Simplificado (Recomendado para README)
+
+👉 Muestra la arquitectura general sin tanto detalle.
+
+
+```mermaid
+flowchart LR
+  FE[Frontend]
+  API[Express API]
+  CTRL[Controllers]
+  SRV[Services]
+  FS[File System]
+  TMDB[TMDB API]
+  LOG[Winston Logger]
+
+  FE --> API
+  API --> CTRL
+  CTRL --> SRV
+  CTRL --> FS
+  SRV --> TMDB
+
+  API --> LOG
+  CTRL --> LOG
+  SRV --> LOG
+```
+#### 2️⃣ Diagrama Vertical (Más claro en mobile)
+
+👉 Ideal si el README se ve mucho en mobile.
+
+
+```mermaid
+flowchart TB
+  FE[Frontend]
+  API[Express API]
+  CTRL[Controllers]
+  SRV[Services]
+  FS[File System]
+  TMDB[TMDB API]
+  LOG[Winston Logger]
+
+  FE --> API
+  API --> CTRL
+  CTRL --> SRV
+
+  CTRL --> FS
+  SRV --> TMDB
+
+  API --> LOG
+  CTRL --> LOG
+  SRV --> LOG
+```
+#### 3️⃣ Request Lifecycle (Flujo de una Request)
+
+👉 Súper pro para explicar cómo viaja una request.
+
+```mermaid
+sequenceDiagram
+  participant FE as Frontend
+  participant API as Express API
+  participant R as Routes
+  participant C as Controllers
+  participant S as Services
+  participant FS as File System
+  participant TMDB as TMDB API
+  participant L as Winston Logger
+
+  FE->>API: HTTP Request
+  API->>R: Route match
+  R->>C: Controller handler
+
+  C->>L: log info
+  C->>S: Business logic
+
+  alt Needs file system
+    C->>FS: Read/Write files
+  end
+
+  alt Needs TMDB
+    S->>TMDB: External API call
+    TMDB-->>S: Movie metadata
+  end
+
+  S-->>C: Processed data
+  C-->>API: HTTP Response
+  API-->>FE: JSON Response
+```
+
+
 ---
 
 ## 📌 Portfolio Highlights
