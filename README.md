@@ -114,14 +114,16 @@ http://localhost:5000/api
 
 ### - Reproductor
 
+ Por defecto abre el reproductor VLC
+
  POST /api/play
 
-### - TMDB
+### - The Movie DataBase (Obtener posters)
 
  GET /api/search-tmdb
  GET /api/movie-details
 
-### - Fix Match (poster manual)
+### - Fix Match (buscar poster manual)
 
  POST /api/fix-match
 
@@ -139,7 +141,7 @@ Logger centralizado con:
 
 #### Ejemplo:
 
-```bash
+```js
 logger.info("Servidor iniciado");
 logger.warn("No hay rutas configuradas");
 logger.error("Error crítico", error);
