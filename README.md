@@ -174,8 +174,11 @@ flowchart LR
 ✔️ Integración real con filesystem.
 
 ✔️ Watcher en tiempo real.
+
 ✔️ Integración con API externa (TMDB).
+
 ✔️ Observabilidad con Winston.
+
 ✔️ Arquitectura modular (routes/controllers/services).
 
 ---
@@ -183,6 +186,7 @@ flowchart LR
 ## 📄 Documentación
 
 ✔️POSTMAN_GUIA.md
+
 ✔️swagger.yaml (OpenAPI 3.0).
 
 
