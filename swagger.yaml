@@ -1,0 +1,149 @@
+openapi: 3.0.0
+info:
+  title: Videoteca 3 API
+  version: 1.0.0
+  description: >
+    API para gestión de videoteca local con indexación de carpetas,
+    exploración del sistema de archivos, integración con TMDB,
+    reproducción local y logging con Winston.
+
+servers:
+  - url: http://localhost:5000/api
+
+paths:
+  /health:
+    get:
+      summary: Health check del servidor
+      tags: [System]
+      responses:
+        "200":
+          description: Estado del servidor
+
+  /settings:
+    get:
+      summary: Obtener configuración actual
+      tags: [Settings]
+      responses:
+        "200":
+          description: Configuración actual
+    post:
+      summary: Guardar configuración de carpetas
+      tags: [Settings]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                paths:
+                  type: array
+                  items:
+                    type: string
+                  example:
+                    - "C:\\Videos"
+                    - "E:\\Peliculas"
+      responses:
+        "200":
+          description: Configuración guardada
+
+  /browse:
+    get:
+      summary: Obtener biblioteca indexada
+      tags: [Library]
+      responses:
+        "200":
+          description: Lista de películas indexadas
+
+  /scan:
+    post:
+      summary: Forzar escaneo de carpetas
+      tags: [Library]
+      responses:
+        "200":
+          description: Biblioteca actualizada
+
+  /explorer/browse:
+    post:
+      summary: Explorar sistema de archivos
+      tags: [Explorer]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                  example: "C:\\Users"
+      responses:
+        "200":
+          description: Contenido de carpeta
+
+  /play:
+    post:
+      summary: Reproducir película local
+      tags: [Player]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                index:
+                  type: number
+                  example: 0
+      responses:
+        "200":
+          description: Reproducción iniciada
+
+  /search-tmdb:
+    get:
+      summary: Buscar películas en TMDB
+      tags: [TMDB]
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+            example: Alien
+      responses:
+        "200":
+          description: Resultados de búsqueda TMDB
+
+  /movie-details:
+    get:
+      summary: Obtener detalles completos desde TMDB
+      tags: [TMDB]
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+            example: Alien
+      responses:
+        "200":
+          description: Metadata completa de película
+
+  /fix-match:
+    post:
+      summary: Corregir poster manualmente
+      tags: [Library]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                  example: "Alien (1979).mkv"
+                posterUrl:
+                  type: string
+                  example: "https://image.tmdb.org/t/p/w500/custom.jpg"
+      responses:
+        "200":
+          description: Poster actualizado correctamente
