@@ -90,17 +90,17 @@ http://localhost:5000/api
 ###  - Health Check
 
 GET /api/health
-
+--
 ###  - Configuración
 
 GET /api/settings
 POST /api/settings
-
+--
 ###  - Biblioteca
 
 GET /api/browse
 POST /api/scan
-
+--
 ###  - Explorador de Carpetas
 
 POST /api/explorer/browse
