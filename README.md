@@ -141,38 +141,6 @@ logger.error("Error crítico", error);
 ---
 
 ## 🏛️ Architecture Diagram
-```mermaid
-flowchart LR
-  FE[Frontend React + Vite]
-  API[Express API]
-  ROUTES[Routes]
-  CONTROLLERS[Controllers]
-  SERVICES[Services]
-  FS[File System]
-  TMDB[TMDB API]
-  LOGGER[Winston Logger]
-  SETTINGS[settings.json]
-
-  FE -->|HTTP REST| API
-  API --> ROUTES
-  ROUTES --> CONTROLLERS
-
-  CONTROLLERS --> SERVICES
-  CONTROLLERS --> FS
-  CONTROLLERS --> SETTINGS
-
-  SERVICES --> FS
-  SERVICES --> TMDB
-
-  API --> LOGGER
-  CONTROLLERS --> LOGGER
-  SERVICES --> LOGGER
-```
-
-#### 1️⃣ Diagrama Simplificado (Recomendado para README)
-
-👉 Muestra la arquitectura general sin tanto detalle.
-
 
 ```mermaid
 flowchart LR
@@ -194,35 +162,9 @@ flowchart LR
   CTRL --> LOG
   SRV --> LOG
 ```
-#### 2️⃣ Diagrama Vertical (Más claro en mobile)
 
-👉 Ideal si el README se ve mucho en mobile.
-
-
-```mermaid
-flowchart TB
-  FE[Frontend]
-  API[Express API]
-  CTRL[Controllers]
-  SRV[Services]
-  FS[File System]
-  TMDB[TMDB API]
-  LOG[Winston Logger]
-
-  FE --> API
-  API --> CTRL
-  CTRL --> SRV
-
-  CTRL --> FS
-  SRV --> TMDB
-
-  API --> LOG
-  CTRL --> LOG
-  SRV --> LOG
-```
-#### 3️⃣ Request Lifecycle (Flujo de una Request)
-
-👉 Súper pro para explicar cómo viaja una request.
+### Request Flow (Flujo de una Request) 
+#### (Request Lifecycle) 
 
 ```mermaid
 sequenceDiagram
