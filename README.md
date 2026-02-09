@@ -96,34 +96,34 @@ http://localhost:5000/api
 
 ### - Health Check
 
-##### GET /api/health
+ GET /api/health
 
 ### - Configuración
 
-##### GET /api/settings
-##### POST /api/settings
+ GET /api/settings
+ POST /api/settings
 
 ### - Biblioteca
 
-GET /api/browse
-POST /api/scan
+ GET /api/browse
+ POST /api/scan
 
 ### - Explorador de Carpetas
 
-POST /api/explorer/browse
+ POST /api/explorer/browse
 
 ### - Reproductor
 
-POST /api/play
+ POST /api/play
 
 ### - TMDB
 
-GET /api/search-tmdb
-GET /api/movie-details
+ GET /api/search-tmdb
+ GET /api/movie-details
 
 ### - Fix Match (poster manual)
 
-POST /api/fix-match
+ POST /api/fix-match
 
 ---
 
