@@ -7,7 +7,7 @@ Incluye logging profesional con Winston, watcher de carpetas y arquitectura modu
 
 ---
 
-## 🚀 Features
+## 🚀 Features (Características)
 
 - Indexación automática de carpetas de películas.  
 - Explorador de sistema de archivos.  
@@ -80,7 +80,7 @@ TMDB_TOKEN=TU_TOKEN_DE_TMDB
 npm start
 ```
 
-#### Servidor por defecto:
+#### Servidor por defecto
 
 ```bash
 http://localhost:5000
@@ -96,12 +96,12 @@ http://localhost:5000/api
 
 ### - Health Check
 
-GET /api/health
+##### GET /api/health
 
 ### - Configuración
 
-GET /api/settings
-POST /api/settings
+##### GET /api/settings
+##### POST /api/settings
 
 ### - Biblioteca
 
