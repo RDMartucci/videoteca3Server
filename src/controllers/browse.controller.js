@@ -6,43 +6,45 @@
 /********************************************************************************************** */
 
 import { exec } from 'child_process';
-import logger from '../config/logger.js';
+import logger from '../config/logger.js';//
 import { saveMapping, getMappings } from '../utils/storage.js';
 import { buildIndex } from '../services/indexer.service.js';
-import { cleanFileName } from '../utils/cleaner.js'; // Importamos tu cleaner
+import { cleanFileName } from '../utils/cleaner.js';
 import fs from 'fs/promises';
 import path from 'path';
 
-const SETTINGS_FILE = path.resolve('settings.json');
+const SETTINGS_FILE = path.resolve('settings.json');// Cargamos el Token desde las variables de entorno.
 
-export const getSettings = async (req, res) => {
-    try {
-        const data = await fs.readFile(SETTINGS_FILE, 'utf-8');
-        const settings = JSON.parse(data);
-        res.json({ ...settings, isFirstStart: !settings.paths || settings.paths.length === 0 });
-    } catch (error) {
-        res.json({ paths: [], isFirstStart: true });
+export const getSettings = async (req, res) => {//
+    try {// Intentamos leer el archivo de configuración settings.json. Si existe, lo parseamos y verificamos si la lista de rutas está vacía.
+        const data = await fs.readFile(SETTINGS_FILE, 'utf-8');// Si el archivo existe, pero la lista de rutas está vacía, consideramos que es el primer inicio
+        const settings = JSON.parse(data);// Si el archivo existe pero la lista de rutas está vacía, isFirstStart será true
+        res.json({ ...settings, isFirstStart: !settings.paths || settings.paths.length === 0 });// Si el archivo existe pero la lista de rutas está vacía
+    } catch (error) {// Si el archivo ni siquiera existe, es el primer inicio absoluto
+        res.json({ paths: [], isFirstStart: true });// Si el archivo ni siquiera existe, es el primer inicio absoluto
     }
 };
 
 export const saveSettings = async (req, res) => {
-    try {
+    try {// Extraemos las rutas del cuerpo de la solicitud. Si no se proporcionan, usamos un array vacío por defecto.
         const paths = Array.isArray(req.body?.paths) ? req.body.paths : [];
-        await fs.writeFile(SETTINGS_FILE, JSON.stringify({ paths }, null, 2));
-        logger.info("⚙️ Indexando nuevas rutas...");
-        const movies = await buildIndex(); 
-        res.json({ message: "Configuración guardada", movies });
-    } catch (error) {
-        res.status(500).json({ error: "No se pudieron guardar los ajustes" });
+        await fs.writeFile(SETTINGS_FILE, JSON.stringify({ paths }, null, 2));// Guardamos las rutas en settings.json. El segundo argumento de JSON.stringify es null para no modificar la estructura, y el tercero es 2 para formatear con indentación de 2 espacios.
+        logger.info("⚙️ Indexando nuevas rutas...");// Iniciamos el proceso de indexación inmediatamente después de guardar la configuración. Si buildIndex es asíncrono, el 'await' hará que el spinner en el front se mantenga activo hasta que termine de procesar las carpetas.
+        const movies = await buildIndex(); // Esperamos a que buildIndex termine para asegurarnos de que el índice se ha actualizado antes de responder al cliente.
+        res.json({ message: "Configuración guardada", movies });// Respondemos con un mensaje de éxito y opcionalmente con la lista de películas indexadas.
+    } catch (error) {// Si ocurre un error al guardar la configuración o durante el proceso de indexación, lo registramos y respondemos con un error 500.
+        logger.error("Error al guardar settings:", error);// Registramos el error para diagnóstico.
+        res.status(500).json({ error: "No se pudieron guardar los ajustes" });// Respondemos con un error 500 indicando que no se pudieron guardar los ajustes.
     }
 };
 
 export const getExplorerContent = async (req, res) => {
-    try {
-        const results = await buildIndex();
-        res.json(Array.isArray(results) ? results : []);
-    } catch (error) {
-        res.status(500).json([]);
+    try {// Llamamos a buildIndex para obtener el contenido de la biblioteca. Aseguramos que la respuesta sea un array antes de enviarla al cliente.
+        const results = await buildIndex();// Forzamos que sea un array antes de enviarlo. Esto es importante para evitar errores en el frontend si buildIndex devuelve algo inesperado.
+        res.json(Array.isArray(results) ? results : []);// Si buildIndex no devuelve un array, respondemos con un array vacío para mantener la consistencia en el frontend.
+    } catch (error) {// Si ocurre un error durante la obtención del contenido, lo registramos y respondemos con un array vacío para que el frontend no rompa.
+        logger.error("Error al obtener contenido del explorador:", error);// Registramos el error para diagnóstico.
+        res.status(500).json([]);// Respondemos con un array vacío para que el frontend no rompa.
     }
 };
 
