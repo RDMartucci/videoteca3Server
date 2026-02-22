@@ -9,6 +9,7 @@ import express from 'express';
 const router = express.Router();
 import * as browseController from '../controllers/browse.controller.js';
 import { getHealth } from '../controllers/health.controller.js'; 
+import { streamMedia } from '../controllers/stream.controller.js';
 
 // Ruta para obtener la configuración actual.
 router.get('/settings', browseController.getSettings);
@@ -34,6 +35,15 @@ router.post('/scan', async (req, res) => {
         res.status(500).json({ error: "Error durante el escaneo" });
     }
 });
+// Ruta para el streaming de medios con soporte Range.
+router.get('/stream/:id', streamMedia);
+// Ruta para obtener los detalles de un medio específico por su ID.
+router.get('/media/:id', browseController.getMediaDetails);
+// Rutas para guardar el historial de reproducción.
+router.post('/history', browseController.saveHistory);
+// Ruta para obtener el historial de reproducción.
+router.get('/history', browseController.getHistory);
+
 
 export default router;
 
