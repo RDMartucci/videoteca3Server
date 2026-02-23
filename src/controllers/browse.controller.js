@@ -14,7 +14,9 @@ import { cleanFileName } from '../utils/cleaner.js';
 import fs from 'fs/promises';
 import path from 'path';
 import { getPaginatedMedia } from '../services/media.service.js';
-import { getMetadata } from '../services/metadata.service.js';  
+import { getMetadata } from '../services/metadata.service.js';
+import { saveProgress, getContinueWatching } from '../services/history.service.js';
+  
 
 const SETTINGS_FILE = path.resolve('settings.json');// Cargamos el Token desde las variables de entorno.
 
@@ -223,9 +225,26 @@ export const getMediaDetails = async (req, res) => {
 };
 
 export const saveHistory = (req, res) => {
-  saveProgress(req.body);
-  res.json({ ok: true });
+  try {
+    const { mediaId, progress, duration } = req.body;
+
+    if (!mediaId) {
+      return res.status(400).json({ error: "mediaId es requerido" });
+    }
+
+    saveProgress({ mediaId, progress, duration });
+
+    res.json({ ok: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error guardando historial" });
+  }
 };
+
+// export const saveHistory = (req, res) => {
+//   saveProgress(req.body);
+//   res.json({ ok: true });
+// };
 
 export const getHistory = (req, res) => {
   const data = getContinueWatching();

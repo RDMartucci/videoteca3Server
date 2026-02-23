@@ -10,6 +10,7 @@ const router = express.Router();
 import * as browseController from '../controllers/browse.controller.js';
 import { getHealth } from '../controllers/health.controller.js'; 
 import { streamMedia } from '../controllers/stream.controller.js';
+import { runIndex } from '../controllers/index.controller.js';
 
 // Ruta para obtener la configuración actual.
 router.get('/settings', browseController.getSettings);
@@ -43,7 +44,8 @@ router.get('/media/:id', browseController.getMediaDetails);
 router.post('/history', browseController.saveHistory);
 // Ruta para obtener el historial de reproducción.
 router.get('/history', browseController.getHistory);
-
+// Ruta para ejecutar la indexación de la biblioteca.
+router.post('/index', runIndex);
 
 export default router;
 
