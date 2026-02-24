@@ -1,238 +1,330 @@
-# 🎬 Videoteca 3 Server — REST API
+# 🎬 Videoteca3Server
 
-Backend para una aplicación de videoteca local, desarrollado con Node.js y Express.  
-Permite indexar carpetas del sistema, explorar archivos, obtener metadata desde TMDB, reproducir videos localmente y gestionar posters.
+![Node.js](https://img.shields.io/badge/Node.js-22.x-green)
+![Express](https://img.shields.io/badge/Express-5.x-black)
+![SQLite](https://img.shields.io/badge/SQLite-WAL%20Mode-blue)
+![Status](https://img.shields.io/badge/status-active-success)
+![License](https://img.shields.io/badge/license-personal-lightgrey)
 
-Incluye logging profesional con Winston, watcher de carpetas y arquitectura modular.
+Backend multimedia profesional estilo Plex / Netflix.
 
----
-
-## 🚀 Features (Características)
-
-- Indexación automática de carpetas de películas.  
-- Explorador de sistema de archivos.  
-- Biblioteca de películas indexadas.  
-- Integración con TMDB (búsqueda y detalles).  
-- Reproducción local de videos.  
-- Corrección manual de posters (fix match).  
-- Health check del servidor.  
-- Watcher para detectar cambios en carpetas.  
-- Logging centralizado con Winston.  
+Diseñado para soportar frontend moderno con virtualización, streaming HTML5 y arquitectura modular escalable.
 
 ---
 
-## 🧰 Stack Tecnológico
+# 🚀 Features
 
-- Node.js  
-- Express  
-- JavaScript (ES Modules)  
-- dotenv  
-- Winston (logging)  
-- The Movie Database (TMDB API)  
-- Postman (testing)  
+- ✅ Indexación de biblioteca local
+- ✅ Base de datos SQLite (WAL)
+- ✅ Streaming con soporte HTTP Range
+- ✅ Metadata lazy (TMDB)
+- ✅ Cache en memoria
+- ✅ Historial persistente (Continue Watching)
+- ✅ Paginación real
+- ✅ Middleware global de errores
+- ✅ Validación estructurada reusable
+- ✅ Arquitectura modular limpia
 
 ---
 
-## 🏗️ Arquitectura
+# 🏗 Arquitectura
 
-```bash
+            ┌──────────────────────┐
+            │      Frontend        │
+            │  (React / Vite)      │
+            └──────────┬───────────┘
+                       │ HTTP
+                       ▼
+            ┌──────────────────────┐
+            │      Express API     │
+            │  (Controllers Layer) │
+            └──────────┬───────────┘
+                       ▼
+            ┌──────────────────────┐
+            │       Services       │
+            │  Business Logic      │
+            └──────────┬───────────┘
+                       ▼
+            ┌──────────────────────┐
+            │      SQLite DB       │
+            │  better-sqlite3 WAL  │
+            └──────────┬───────────┘
+                       ▼
+            ┌──────────────────────┐
+            │  Local File System   │
+            │  (Video Library)     │
+            └──────────────────────┘
+            
+---
+
+# 📁 Estructura del Proyecto
+
 src/
-├── app.js # Configuración Express
+├── controllers/
+├── services/
+├── db/
+├── middlewares/
+├── validators/
 ├── routes/
-│ ├── api.routes.js # Rutas principales API
-│ └── explorer.routes.js
-├── controllers/ # Lógica de negocio
-├── services/ # Indexer, watcher, TMDB, etc
-├── config/
-│ └── logger.js # Winston logger
-└── data/
-└── settings.json # Configuración persistida
-```
+├── utils/
+├── app.js
+└── server.js
+
 
 ---
 
-server.js:
+# 🗄 Base de Datos
 
-- Arranca Express.
-- Ejecuta indexación inicial.
-- Inicia watcher de carpetas.
+Motor: SQLite  
+Driver: better-sqlite3  
+Modo: WAL (Write-Ahead Logging)  
+
+Ubicación:
+
+/data/videoteca.db
+
+Tablas principales:
+
+### media
+- id
+- name
+- cleanTitle
+- category
+- type
+- path
+- fileSize
+- poster
+- backdrop
+- runtime
+- rating
+- hasMetadata
+- createdAt
+
+### history
+- id
+- mediaId
+- progress
+- duration
+- updatedAt
 
 ---
 
-## ⚙️ Instalación
+# ⚙️ Instalación
 
 ```bash
-git clone https://github.com/RDMartucci/videoteca3Server.git
-cd videoteca3Server
 npm install
-```
 
-#### Crear archivo .env:
+Crear archivo .env (opcional para metadata TMDB):
 
-```bash
-PORT=5000
-TMDB_TOKEN=TU_TOKEN_DE_TMDB
-```
+TMDB_TOKEN=tu_token_aqui
 
-#### ▶️ Ejecución
+Iniciar servidor:
 
-```bash
 npm start
-```
 
-#### Servidor por defecto
+Servidor por defecto:
 
-```bash
 http://localhost:5000
-```
-
-#### 📡 Base URL
-
-```bash
-http://localhost:5000/api
-```
-
-## 📚 Endpoints Principales
-
-### - Health Check
-
- GET /api/health
-
-### - Configuración
-
- GET /api/settings
-
- POST /api/settings
-
-### - Biblioteca
-
- GET /api/browse
-
- POST /api/scan
-
-### - Explorador de Carpetas
-
- POST /api/explorer/browse
-
-### - Reproductor
-
- Por defecto abre el reproductor VLC
-
- POST /api/play
-
-### - The Movie DataBase (Obtener posters)
-
- GET /api/search-tmdb
- 
- GET /api/movie-details
-
-### - Fix Match (buscar poster manual)
-
- POST /api/fix-match
-
----
-
-## 🪵 Logging (Winston)
-
-Logger centralizado con:
-
-- Timestamp automático.
-
-- Colores en consola.
-
-- Niveles: info, warn, error.
-
-#### Ejemplo:
-
-```js
-logger.info("Servidor iniciado");
-logger.warn("No hay rutas configuradas");
-logger.error("Error crítico", error);
-```
-
----
-
-## 🏛️ Architecture Diagram
-
-```mermaid
-flowchart LR
-  FE[Frontend]
-  API[Express API]
-  CTRL[Controllers]
-  SRV[Services]
-  FS[File System]
-  TMDB[TMDB API]
-  LOG[Winston Logger]
-
-  FE --> API
-  API --> CTRL
-  CTRL --> SRV
-  CTRL --> FS
-  SRV --> TMDB
-
-  API --> LOG
-  CTRL --> LOG
-  SRV --> LOG
-```
-
-### Request Flow (Flujo de una Request) 
-#### (Request Lifecycle) 
-
-```mermaid
-sequenceDiagram
-  participant FE as Frontend
-  participant API as Express API
-  participant R as Routes
-  participant C as Controllers
-  participant S as Services
-  participant FS as File System
-  participant TMDB as TMDB API
-  participant L as Winston Logger
-
-  FE->>API: HTTP Request
-  API->>R: Route match
-  R->>C: Controller handler
-
-  C->>L: log info
-  C->>S: Business logic
-
-  alt Needs file system
-    C->>FS: Read/Write files
-  end
-
-  alt Needs TMDB
-    S->>TMDB: External API call
-    TMDB-->>S: Movie metadata
-  end
-
-  S-->>C: Processed data
-  C-->>API: HTTP Response
-  API-->>FE: JSON Response
-``` 
 
 
----
+📡 API Endpoints
 
-## 📌 Portfolio Highlights
+Prefijo base:
+/api
 
-✔️ Integración real con filesystem.
+🔍 Health
 
-✔️ Watcher en tiempo real.
+GET /api/health
 
-✔️ Integración con API externa (TMDB).
+Verifica que el servidor esté activo.
 
-✔️ Observabilidad con Winston.
+⚙️ Configuración
 
-✔️ Arquitectura modular (routes/controllers/services).
+GET /api/settings
+POST /api/settings
 
----
+📚 Biblioteca
 
-## 📄 Documentación
+GET /api/browse
 
-- POSTMAN_GUIA.md
+Query params:
 
-- swagger.yaml (OpenAPI 3.0).
+page
 
----
+limit
 
+category
+
+search
+
+sort
+
+order
+
+Ejemplo:
+GET /api/browse?page=1&limit=30
+
+🎞 Media Details
+
+GET /api/media/:id
+
+Obtiene detalles del medio.
+
+Si no tiene metadata → realiza búsqueda lazy en TMDB.
+
+▶ Streaming
+
+GET /api/stream/:id
+
+Compatible con <video> HTML5
+
+Soporta HTTP Range
+
+Streaming progresivo
+
+🕓 Historial
+
+POST /api/history
+
+Body:
+{
+  "mediaId": "uuid",
+  "progress": 120,
+  "duration": 5400
+}
+
+GET /api/history
+
+Devuelve lista de Continue Watching.
+
+📂 Indexación
+
+POST /api/index
+
+Escanea carpetas configuradas e indexa archivos.
+
+🛡 Hardening Implementado
+
+Middleware global de errores
+
+Async handler centralizado
+
+Validación reusable por esquema
+
+Respuestas de error consistentes
+
+Sanitización básica de parámetros
+
+Separación clara de capas
+
+Ejemplo de error:
+
+{
+  "success": false,
+  "message": "Page debe ser un número mayor a 0"
+}
+
+⚡ Cache Layer
+
+Cache en memoria para resultados paginados
+
+TTL: 5 minutos
+
+Invalida automáticamente tras indexación
+
+🧪 Testing (Postman)
+
+Orden recomendado:
+
+POST /api/index
+
+GET /api/browse
+
+GET /api/media/:id
+
+GET /api/stream/:id
+
+POST /api/history
+
+GET /api/history
+
+🚀 Despliegue
+🔹 Producción básica (Node)
+
+npm install --production
+npm start
+
+🔹 Usando PM2 (recomendado)
+
+npm install -g pm2
+pm2 start server.js --name videoteca
+pm2 save
+pm2 startup
+
+🔹 Variables de entorno
+
+En producción usar:
+NODE_ENV=production
+TMDB_TOKEN=token_real
+PORT=3000
+
+🔹 Reverse Proxy (Nginx ejemplo)
+
+server {
+    listen 80;
+    server_name tu-dominio.com;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+🛣 Roadmap Profesional
+
+Autenticación JWT
+
+Multiusuario
+
+Perfiles
+
+Rate limiting
+
+Helmet
+
+Logging estructurado
+
+Subtítulos automáticos
+
+Thumbnails con FFmpeg
+
+Transcoding adaptativo
+
+Index incremental
+
+🧑‍💻 Stack
+
+Node.js
+
+Express
+
+SQLite
+
+better-sqlite3
+
+Axios
+
+UUID
+
+📜 Licencia
+
+Proyecto personal / educativo.
+
+🎯 Estado
+
+Backend multimedia funcional y preparado para frontend tipo Netflix / Plex.
 
