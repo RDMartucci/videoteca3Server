@@ -92,28 +92,37 @@ export const saveHistory = asyncHandler(async (req, res) => {
 
   const { mediaId, progress, duration } = req.body;
 
-  if (!mediaId) {
-    const error = new Error("mediaId es requerido");
-    error.status = 400;
-    throw error;
-  }
-
-  if (typeof progress !== "number" || progress < 0) {
-    const error = new Error("progress debe ser número válido");
-    error.status = 400;
-    throw error;
-  }
-
-  if (typeof duration !== "number" || duration <= 0) {
-    const error = new Error("duration debe ser número válido");
-    error.status = 400;
-    throw error;
-  }
-
   saveProgress({ mediaId, progress, duration });
 
   res.json({ success: true });
 });
+
+// export const saveHistory = asyncHandler(async (req, res) => {
+
+//   const { mediaId, progress, duration } = req.body;
+
+//   if (!mediaId) {
+//     const error = new Error("mediaId es requerido");
+//     error.status = 400;
+//     throw error;
+//   }
+
+//   if (typeof progress !== "number" || progress < 0) {
+//     const error = new Error("progress debe ser número válido");
+//     error.status = 400;
+//     throw error;
+//   }
+
+//   if (typeof duration !== "number" || duration <= 0) {
+//     const error = new Error("duration debe ser número válido");
+//     error.status = 400;
+//     throw error;
+//   }
+
+//   saveProgress({ mediaId, progress, duration });
+
+//   res.json({ success: true });
+// });
 
 
 /**

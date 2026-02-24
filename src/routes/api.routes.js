@@ -9,6 +9,9 @@ import * as configController from '../controllers/config.controller.js';
 import { getHealth } from '../controllers/health.controller.js';
 import { streamMedia } from '../controllers/stream.controller.js';
 import { runIndex } from '../controllers/index.controller.js';
+import { validate } from '../middlewares/validate.middleware.js';
+import { historySchema } from '../validators/history.validator.js';
+
 
 /* ================================
    CONFIGURACIÓN
@@ -40,7 +43,12 @@ router.get('/stream/:id', streamMedia);
    HISTORIAL
 ================================ */
 
-router.post('/history', browseController.saveHistory);
+// router.post('/history', browseController.saveHistory);
+router.post(
+  '/history',
+  validate(historySchema),
+  browseController.saveHistory
+);
 router.get('/history', browseController.getHistory);
 
 /* ================================
