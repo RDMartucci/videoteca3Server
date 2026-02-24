@@ -1,93 +1,83 @@
 🎬 Videoteca3Server
-Videoteca3Server es un backend multimedia de alto rendimiento diseñado para ofrecer una experiencia estilo Plex o Netflix. Está optimizado para streaming fluido en HTML5, gestión de metadata inteligente (Lazy Loading) y una arquitectura modular fácil de escalar.
+Backend multimedia de alto rendimiento inspirado en el ecosistema de Netflix y Plex.
 
-✨ Características Principales
-🚀 Streaming Progresivo: Soporte nativo para HTTP Range Requests, permitiendo saltar a cualquier punto del video instantáneamente.
+🌟 Características Principales
+Una arquitectura diseñada para la velocidad y la escalabilidad modular.
 
-🗃️ Base de Datos Optimizada: Uso de SQLite con modo WAL (Write-Ahead Logging) para lecturas/escrituras concurrentes ultrarrápidas.
+⚡ Streaming Nativo: Soporte para HTTP Range, permitiendo rebobinar y adelantar videos al instante.
 
-🧠 Metadata Lazy (TMDB): Enriquecimiento automático de información (posters, ratings, sinopsis) solo cuando se solicita.
+📂 Indexación Inteligente: Escaneo automático de carpetas locales para construir tu biblioteca.
 
-⚡ Capa de Cache: Sistema de cache en memoria para paginación, reduciendo la carga en disco.
+🧠 Metadata Lazy: Conexión con TMDB para obtener posters y detalles solo cuando los necesitas.
 
-🕒 Historial Persistente: "Continue Watching" integrado para retomar videos donde los dejaste.
+💾 Persistencia Pro: Historial de reproducción (Continue Watching) basado en base de datos SQLite con modo WAL.
 
-🛡️ Hardening & Seguridad: Middleware de errores centralizado, validaciones estructuradas y arquitectura limpia por capas.
+🛡️ Hardening: Validaciones estructuradas y manejo global de errores para un sistema robusto.
 
 🏗️ Arquitectura del Sistema
+El flujo de datos sigue un patrón de capas para separar la lógica de negocio del acceso a datos.
+
 graph TD
-    A[Frontend: React / Vite] -- HTTP/JSON --> B[Express API]
-    B --> C[Service Layer: Lógica de Negocio]
-    C --> D[(SQLite DB: better-sqlite3)]
-    C --> E[Local File System: Media]
+    A[Frontend: React/Vite] -->|API REST| B[Express API]
+    B --> C[Service Layer]
+    C --> D[(SQLite DB)]
+    C --> E[Local Filesystem]
 
-    Estructura de Carpetas
-    src/
-├── controllers/ # Lógica de rutas y respuestas
-├── services/    # Lógica de negocio pura
-├── db/          # Configuración y esquemas de SQLite
-├── middlewares/ # Error handling y validación
-├── routes/      # Definición de endpoints
-└── utils/       # Helpers y constantes
+📁 Organización del Código
+
+src/
+ ├── controllers/   # Gestión de peticiones y respuestas
+ ├── services/      # Lógica de negocio (Streaming, Indexación)
+ ├── db/            # Configuración de SQLite (better-sqlite3)
+ ├── middlewares/   # Seguridad y manejo de errores
+ └── routes/        # Definición de rutas de la API
 
 
-⚙️ Instalación y Configuración
-1. Clonar e Instalar
+ 📡 Referencia de la API
+Todos los endpoints utilizan el prefijo /api.
 
-git clone https://github.com/tu-usuario/videoteca3server.git
-cd videoteca3server
+🔍 Exploración y Media
+Método	Endpoint	Descripción
+GET	/api/browse	Lista la biblioteca con filtros (page, limit, search).
+GET	/api/media/:id	Obtiene detalles y activa búsqueda de metadata.
+GET	/api/stream/:id	Inicia el streaming progresivo compatible con HTML5.
+
+⚙️ Configuración y Control
+
+Método	Endpoint	Descripción
+POST	/api/index	Inicia el escaneo de archivos físicos.
+GET	/api/history	Recupera el historial de reproducción activo.
+GET	/api/health	Verifica la disponibilidad del servidor.
+
+🚀 Instalación Rápida
+1.Instalar dependencias:
+
 npm install
 
+2.Configurar el entorno:
+Crea un archivo .env en la raíz del proyecto:
 
-2. Variables de Entorno
-Crea un archivo .env en la raíz (opcional para metadata):
-
-PORT=5000
 TMDB_TOKEN=tu_token_aqui
-NODE_ENV=development
+PORT=5000
 
-
-3. Ejecución
-# Desarrollo
-npm run dev
-
-# Producción
+3.Iniciar servidor:
 npm start
 
+🗄️ Detalle de Base de Datos
+Utilizamos better-sqlite3 para una latencia mínima.
 
-📡 Guía de API (Endpoints Principales)
-Método	Endpoint	Descripción
-GET	/api/health	Estado del servidor.
-POST	/api/index	Escanea el sistema de archivos e indexa contenido.
-GET	/api/browse	Lista paginada de media (soporta search, category, sort).
-GET	/api/media/:id	Detalle extendido y trigger de metadata TMDB.
-GET	/api/stream/:id	Endpoint de streaming (compatible con <video>).
-GET	/api/history	Obtiene la lista de "Seguir viendo".
+Ubicación: /data/videoteca.db
 
-🛠️ Stack Tecnológico
-Runtime: Node.js (v22.x)
+Tabla Media: Almacena rutas, metadata, ratings y categorías.
 
-Framework: Express.js (v5.x)
+Tabla History: Registra el progreso en segundos de cada archivo.
 
-Base de Datos: SQLite vía better-sqlite3
+🛣️ Roadmap
+[ ] Implementar autenticación JWT.
 
-Integraciones: TMDB API para metadata
+[ ] Generación de miniaturas (FFmpeg).
 
-Utilidades: Axios, UUID, Dotenv
+[ ] Soporte para múltiples perfiles.
 
-🛣️ Roadmap de Próximas Mejoras
-[ ] 🔐 Autenticación JWT y perfiles de usuario.
-
-[ ] 🖼️ Generación de thumbnails automáticos con FFmpeg.
-
-[ ] 📝 Soporte para subtítulos externos (.srt, .vtt).
-
-[ ] 📊 Dashboard de estadísticas de uso.
-
-[ ] 🐳 Dockerización del proyecto.
-
-📜 Licencia
-Proyecto desarrollado con fines educativos y personales.
-
-Desarrollado con ❤️ para amantes del streaming propio.
+[ ] Transcodificación adaptativa.
 
