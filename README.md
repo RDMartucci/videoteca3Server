@@ -102,20 +102,160 @@ JSON{
 1. **Clonar e instalar**  
 
 ```bash
+git clone https://github.com/RDMartucci/videoteca3Server.git
+cd videoteca3Server
 npm install
 ```
 
 2. **Configurar variables (.env)**
 
+```bash
 PORT=5000
-TMDB_TOKEN=tu_api_key_aqui
+TMDB_TOKEN=TU_TOKEN_DE_TMDB
+```
 
-3. **Lanzar en modo producción**
+3. **Iniciar servidor**
 
 ```bash
 npm start
 
 ```
+
+#### Servidor por defecto
+
+```bash
+http://localhost:5000
+```
+
+#### 📡 Base URL
+
+```bash
+http://localhost:5000/api
+```
+---
+<h3 align="center"> 📚 Endpoints Principales</h3>
+
+#### - Health Check
+Verifica que el servidor esté activo.  
+
+```bash
+GET /api/health
+```
+
+#### ⚙️ Configuración
+
+```bash
+GET /api/settings
+POST /api/settings
+```
+
+#### 📚 Biblioteca
+```bash
+GET /api/browse
+```
+
+Query params:
+
+```
+page
+
+limit
+
+category
+
+search
+
+sort
+
+order
+```
+
+*Ejemplo:*  
+```bash
+GET /api/browse?page=1&limit=30
+```
+
+#### 🎞 Media Details
+Obtiene detalles del medio.
+
+Si no tiene metadata → realiza búsqueda lazy en TMDB.
+
+```bash
+GET /api/media/:id
+```
+
+#### ▶ Streaming
+Reproduce el video seleccionado. Compatible con HTML5 y soporta HTTP Range.  
+Streaming progresivo
+
+```bash
+GET /api/stream/:id
+```
+
+#### 🕓 Historial
+
+```bash
+POST /api/history
+```
+
+Body:  
+{  
+  "mediaId": "uuid",  
+  "progress": 120,  
+  "duration": 5400  
+}
+   
+Devuelve lista de 'Continue Watching'.
+```bash
+GET /api/history
+```
+
+#### 🛡 Hardening Implementado
+
+- Middleware global de errores
+
+- Async handler centralizado
+
+- Validación reusable por esquema
+
+- Respuestas de error consistentes
+
+- Sanitización básica de parámetros
+
+- Separación clara de capas
+
+Ejemplo de error:
+
+{  
+  "success": false,  
+  "message": "Page debe ser un número mayor a 0"  
+}
+
+#### ⚡Cache Layer
+
+- Cache en memoria para resultados paginados
+
+- TTL: 5 minutos
+
+- Invalida automáticamente tras indexación
+
+---
+<h3 align="center">🧪 Testing (Postman)</h3>
+
+*Orden recomendado:*
+
+POST /api/index
+
+GET /api/browse
+
+GET /api/media/:id
+
+GET /api/stream/:id
+
+POST /api/history
+
+GET /api/history
+
 
 <h3 align="center">📋 Especificaciones Técnicas (DB)</h3>
 Tabla:media
@@ -126,3 +266,27 @@ Tabla:media
 | **cleanTitle** | String | Título normalizado para búsquedas. |
 | **path** | String | Ruta física absoluta del archivo.|
 | **hasMetadata** | Boolean | Flag para evitar llamadas dobles a TMDB. |
+---
+
+<h3 align="center">🧑‍💻 Stack </h3>
+
+- Node.js
+
+- Express
+
+- SQLite
+
+- better-sqlite3
+
+- Axios
+
+- UUID
+---
+
+<h3 align="center">📜 Licencia</h3>
+
+Proyecto personal / educativo.
+
+🎯 Estado
+
+Backend multimedia funcional y preparado para frontend tipo Netflix / Plex.
