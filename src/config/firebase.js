@@ -1,3 +1,9 @@
+// src/config/firebase.js
+//
+// Configuración de Firebase Admin SDK para autenticación y otras funcionalidades de Firebase.
+// Asegúrate de tener el archivo serviceAccountKey.json con las credenciales de tu proyecto Firebase
+// en la raíz del proyecto o ajusta la ruta según sea necesario.
+//
 import admin from 'firebase-admin';
 import { readFileSync } from 'fs';
 import logger from './logger.js';
