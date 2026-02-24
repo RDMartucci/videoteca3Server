@@ -1,330 +1,93 @@
-# 🎬 Videoteca3Server
+🎬 Videoteca3Server
+Videoteca3Server es un backend multimedia de alto rendimiento diseñado para ofrecer una experiencia estilo Plex o Netflix. Está optimizado para streaming fluido en HTML5, gestión de metadata inteligente (Lazy Loading) y una arquitectura modular fácil de escalar.
 
-![Node.js](https://img.shields.io/badge/Node.js-22.x-green)
-![Express](https://img.shields.io/badge/Express-5.x-black)
-![SQLite](https://img.shields.io/badge/SQLite-WAL%20Mode-blue)
-![Status](https://img.shields.io/badge/status-active-success)
-![License](https://img.shields.io/badge/license-personal-lightgrey)
+✨ Características Principales
+🚀 Streaming Progresivo: Soporte nativo para HTTP Range Requests, permitiendo saltar a cualquier punto del video instantáneamente.
 
-Backend multimedia profesional estilo Plex / Netflix.
+🗃️ Base de Datos Optimizada: Uso de SQLite con modo WAL (Write-Ahead Logging) para lecturas/escrituras concurrentes ultrarrápidas.
 
-Diseñado para soportar frontend moderno con virtualización, streaming HTML5 y arquitectura modular escalable.
+🧠 Metadata Lazy (TMDB): Enriquecimiento automático de información (posters, ratings, sinopsis) solo cuando se solicita.
 
----
+⚡ Capa de Cache: Sistema de cache en memoria para paginación, reduciendo la carga en disco.
 
-# 🚀 Features
+🕒 Historial Persistente: "Continue Watching" integrado para retomar videos donde los dejaste.
 
-- ✅ Indexación de biblioteca local
-- ✅ Base de datos SQLite (WAL)
-- ✅ Streaming con soporte HTTP Range
-- ✅ Metadata lazy (TMDB)
-- ✅ Cache en memoria
-- ✅ Historial persistente (Continue Watching)
-- ✅ Paginación real
-- ✅ Middleware global de errores
-- ✅ Validación estructurada reusable
-- ✅ Arquitectura modular limpia
+🛡️ Hardening & Seguridad: Middleware de errores centralizado, validaciones estructuradas y arquitectura limpia por capas.
 
----
+🏗️ Arquitectura del Sistema
+graph TD
+    A[Frontend: React / Vite] -- HTTP/JSON --> B[Express API]
+    B --> C[Service Layer: Lógica de Negocio]
+    C --> D[(SQLite DB: better-sqlite3)]
+    C --> E[Local File System: Media]
 
-# 🏗 Arquitectura
-
-            ┌──────────────────────┐
-            │      Frontend        │
-            │  (React / Vite)      │
-            └──────────┬───────────┘
-                       │ HTTP
-                       ▼
-            ┌──────────────────────┐
-            │      Express API     │
-            │  (Controllers Layer) │
-            └──────────┬───────────┘
-                       ▼
-            ┌──────────────────────┐
-            │       Services       │
-            │  Business Logic      │
-            └──────────┬───────────┘
-                       ▼
-            ┌──────────────────────┐
-            │      SQLite DB       │
-            │  better-sqlite3 WAL  │
-            └──────────┬───────────┘
-                       ▼
-            ┌──────────────────────┐
-            │  Local File System   │
-            │  (Video Library)     │
-            └──────────────────────┘
-            
----
-
-# 📁 Estructura del Proyecto
-
-src/
-├── controllers/
-├── services/
-├── db/
-├── middlewares/
-├── validators/
-├── routes/
-├── utils/
-├── app.js
-└── server.js
+    Estructura de Carpetas
+    src/
+├── controllers/ # Lógica de rutas y respuestas
+├── services/    # Lógica de negocio pura
+├── db/          # Configuración y esquemas de SQLite
+├── middlewares/ # Error handling y validación
+├── routes/      # Definición de endpoints
+└── utils/       # Helpers y constantes
 
 
----
+⚙️ Instalación y Configuración
+1. Clonar e Instalar
 
-# 🗄 Base de Datos
-
-Motor: SQLite  
-Driver: better-sqlite3  
-Modo: WAL (Write-Ahead Logging)  
-
-Ubicación:
-
-/data/videoteca.db
-
-Tablas principales:
-
-### media
-- id
-- name
-- cleanTitle
-- category
-- type
-- path
-- fileSize
-- poster
-- backdrop
-- runtime
-- rating
-- hasMetadata
-- createdAt
-
-### history
-- id
-- mediaId
-- progress
-- duration
-- updatedAt
-
----
-
-# ⚙️ Instalación
-
-```bash
+git clone https://github.com/tu-usuario/videoteca3server.git
+cd videoteca3server
 npm install
 
-Crear archivo .env (opcional para metadata TMDB):
 
+2. Variables de Entorno
+Crea un archivo .env en la raíz (opcional para metadata):
+
+PORT=5000
 TMDB_TOKEN=tu_token_aqui
+NODE_ENV=development
 
-Iniciar servidor:
 
+3. Ejecución
+# Desarrollo
+npm run dev
+
+# Producción
 npm start
 
-Servidor por defecto:
 
-http://localhost:5000
+📡 Guía de API (Endpoints Principales)
+Método	Endpoint	Descripción
+GET	/api/health	Estado del servidor.
+POST	/api/index	Escanea el sistema de archivos e indexa contenido.
+GET	/api/browse	Lista paginada de media (soporta search, category, sort).
+GET	/api/media/:id	Detalle extendido y trigger de metadata TMDB.
+GET	/api/stream/:id	Endpoint de streaming (compatible con <video>).
+GET	/api/history	Obtiene la lista de "Seguir viendo".
 
+🛠️ Stack Tecnológico
+Runtime: Node.js (v22.x)
 
-📡 API Endpoints
+Framework: Express.js (v5.x)
 
-Prefijo base:
-/api
+Base de Datos: SQLite vía better-sqlite3
 
-🔍 Health
+Integraciones: TMDB API para metadata
 
-GET /api/health
+Utilidades: Axios, UUID, Dotenv
 
-Verifica que el servidor esté activo.
+🛣️ Roadmap de Próximas Mejoras
+[ ] 🔐 Autenticación JWT y perfiles de usuario.
 
-⚙️ Configuración
+[ ] 🖼️ Generación de thumbnails automáticos con FFmpeg.
 
-GET /api/settings
-POST /api/settings
+[ ] 📝 Soporte para subtítulos externos (.srt, .vtt).
 
-📚 Biblioteca
+[ ] 📊 Dashboard de estadísticas de uso.
 
-GET /api/browse
-
-Query params:
-
-page
-
-limit
-
-category
-
-search
-
-sort
-
-order
-
-Ejemplo:
-GET /api/browse?page=1&limit=30
-
-🎞 Media Details
-
-GET /api/media/:id
-
-Obtiene detalles del medio.
-
-Si no tiene metadata → realiza búsqueda lazy en TMDB.
-
-▶ Streaming
-
-GET /api/stream/:id
-
-Compatible con <video> HTML5
-
-Soporta HTTP Range
-
-Streaming progresivo
-
-🕓 Historial
-
-POST /api/history
-
-Body:
-{
-  "mediaId": "uuid",
-  "progress": 120,
-  "duration": 5400
-}
-
-GET /api/history
-
-Devuelve lista de Continue Watching.
-
-📂 Indexación
-
-POST /api/index
-
-Escanea carpetas configuradas e indexa archivos.
-
-🛡 Hardening Implementado
-
-Middleware global de errores
-
-Async handler centralizado
-
-Validación reusable por esquema
-
-Respuestas de error consistentes
-
-Sanitización básica de parámetros
-
-Separación clara de capas
-
-Ejemplo de error:
-
-{
-  "success": false,
-  "message": "Page debe ser un número mayor a 0"
-}
-
-⚡ Cache Layer
-
-Cache en memoria para resultados paginados
-
-TTL: 5 minutos
-
-Invalida automáticamente tras indexación
-
-🧪 Testing (Postman)
-
-Orden recomendado:
-
-POST /api/index
-
-GET /api/browse
-
-GET /api/media/:id
-
-GET /api/stream/:id
-
-POST /api/history
-
-GET /api/history
-
-🚀 Despliegue
-🔹 Producción básica (Node)
-
-npm install --production
-npm start
-
-🔹 Usando PM2 (recomendado)
-
-npm install -g pm2
-pm2 start server.js --name videoteca
-pm2 save
-pm2 startup
-
-🔹 Variables de entorno
-
-En producción usar:
-NODE_ENV=production
-TMDB_TOKEN=token_real
-PORT=3000
-
-🔹 Reverse Proxy (Nginx ejemplo)
-
-server {
-    listen 80;
-    server_name tu-dominio.com;
-
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-
-🛣 Roadmap Profesional
-
-Autenticación JWT
-
-Multiusuario
-
-Perfiles
-
-Rate limiting
-
-Helmet
-
-Logging estructurado
-
-Subtítulos automáticos
-
-Thumbnails con FFmpeg
-
-Transcoding adaptativo
-
-Index incremental
-
-🧑‍💻 Stack
-
-Node.js
-
-Express
-
-SQLite
-
-better-sqlite3
-
-Axios
-
-UUID
+[ ] 🐳 Dockerización del proyecto.
 
 📜 Licencia
+Proyecto desarrollado con fines educativos y personales.
 
-Proyecto personal / educativo.
-
-🎯 Estado
-
-Backend multimedia funcional y preparado para frontend tipo Netflix / Plex.
+Desarrollado con ❤️ para amantes del streaming propio.
 
