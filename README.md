@@ -1,83 +1,89 @@
-🎬 Videoteca3Server
-Backend multimedia de alto rendimiento inspirado en el ecosistema de Netflix y Plex.
+## 🎬 Videoteca3Server
 
-🌟 Características Principales
-Una arquitectura diseñada para la velocidad y la escalabilidad modular.
+Arquitectura robusta de Backend para Streaming Privado. > Inspirado en la fluidez de Netflix, construido con la eficiencia de SQLite WAL.
 
-⚡ Streaming Nativo: Soporte para HTTP Range, permitiendo rebobinar y adelantar videos al instante.
+## 💎 Diferenciales del Proyecto
 
-📂 Indexación Inteligente: Escaneo automático de carpetas locales para construir tu biblioteca.
+Este servidor no solo entrega archivos; gestiona una experiencia multimedia completa con las siguientes tecnologías:
 
-🧠 Metadata Lazy: Conexión con TMDB para obtener posters y detalles solo cuando los necesitas.
+🚀 Streaming Adaptativo: Implementación de HTTP Range Requests para soporte nativo de scroll en video HTML5.
 
-💾 Persistencia Pro: Historial de reproducción (Continue Watching) basado en base de datos SQLite con modo WAL.
+⚡ Alto Rendimiento: Motor de base de datos better-sqlite3 operando en modo WAL para evitar bloqueos.
 
-🛡️ Hardening: Validaciones estructuradas y manejo global de errores para un sistema robusto.
+🧠 Inteligencia Lazy: Metadata de TMDB que se descarga solo bajo demanda, optimizando el almacenamiento.
 
-🏗️ Arquitectura del Sistema
-El flujo de datos sigue un patrón de capas para separar la lógica de negocio del acceso a datos.
+🛡️ Capa de Seguridad: Middleware global de errores y validación de esquemas reutilizable.
 
-graph TD
-    A[Frontend: React/Vite] -->|API REST| B[Express API]
-    B --> C[Service Layer]
-    C --> D[(SQLite DB)]
-    C --> E[Local Filesystem]
+🏗️ Estructura y Diseño
+📂 Organización de Capas
 
-📁 Organización del Código
+Directorio	Responsabilidad
+src/controllers	Orquestación de entrada/salida y códigos HTTP.
+src/services	Cerebro del sistema: Lógica de streaming e indexación.
+src/db	Persistencia y optimización de tablas SQL.
+src/validators	Esquemas de validación de datos entrantes.
 
-src/
- ├── controllers/   # Gestión de peticiones y respuestas
- ├── services/      # Lógica de negocio (Streaming, Indexación)
- ├── db/            # Configuración de SQLite (better-sqlite3)
- ├── middlewares/   # Seguridad y manejo de errores
- └── routes/        # Definición de rutas de la API
+🚀 Guía de Pruebas en Postman
+Sigue este flujo para validar que tu servidor está configurado correctamente.
+
+1️⃣ Inicialización (Indexación)
+POST {{base_url}}/api/index
+
+Escanea tus carpetas físicas y llena la base de datos.
+
+Respuesta Exitosa (200 OK):
+
+{
+  "success": true,
+  "message": "Indexación completada",
+  "stats": { "added": 45, "skipped": 2 }
+}
+
+2️⃣ Exploración de Contenido
+GET {{base_url}}/api/browse?page=1&limit=10&category=Accion
+
+Respuesta con Paginación:
+
+{
+  "data": [
+    {
+      "id": "uuid-123",
+      "title": "Inception",
+      "poster": "https://image.tmdb.org/t/p/w500/...",
+      "rating": 8.8
+    }
+  ],
+  "meta": { "total": 150, "pages": 15 }
+}
 
 
- 📡 Referencia de la API
-Todos los endpoints utilizan el prefijo /api.
+3️⃣ Control de Historial
+POST {{base_url}}/api/history
 
-🔍 Exploración y Media
-Método	Endpoint	Descripción
-GET	/api/browse	Lista la biblioteca con filtros (page, limit, search).
-GET	/api/media/:id	Obtiene detalles y activa búsqueda de metadata.
-GET	/api/stream/:id	Inicia el streaming progresivo compatible con HTML5.
+Cuerpo (JSON):
 
-⚙️ Configuración y Control
+{
+  "mediaId": "uuid-123",
+  "progress": 3500,
+  "duration": 7200
+}
 
-Método	Endpoint	Descripción
-POST	/api/index	Inicia el escaneo de archivos físicos.
-GET	/api/history	Recupera el historial de reproducción activo.
-GET	/api/health	Verifica la disponibilidad del servidor.
 
-🚀 Instalación Rápida
-1.Instalar dependencias:
+🛠️ Configuración del Entorno
+[!TIP]
+Asegúrate de tener Node.js 22.x instalado para total compatibilidad con las últimas características.
+
+# 1. Clonar e instalar
 
 npm install
 
-2.Configurar el entorno:
-Crea un archivo .env en la raíz del proyecto:
+# 2. Configurar variables (.env)
 
-TMDB_TOKEN=tu_token_aqui
 PORT=5000
+TMDB_TOKEN=tu_api_key_aqui
 
-3.Iniciar servidor:
+# 3. Lanzar en modo producción
+
 npm start
 
-🗄️ Detalle de Base de Datos
-Utilizamos better-sqlite3 para una latencia mínima.
-
-Ubicación: /data/videoteca.db
-
-Tabla Media: Almacena rutas, metadata, ratings y categorías.
-
-Tabla History: Registra el progreso en segundos de cada archivo.
-
-🛣️ Roadmap
-[ ] Implementar autenticación JWT.
-
-[ ] Generación de miniaturas (FFmpeg).
-
-[ ] Soporte para múltiples perfiles.
-
-[ ] Transcodificación adaptativa.
 
