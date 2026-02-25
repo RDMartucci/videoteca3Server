@@ -49,6 +49,14 @@ CREATE TABLE IF NOT EXISTS history (
   duration INTEGER,
   updatedAt TEXT
 );
+
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  username TEXT UNIQUE,
+  password TEXT,
+  role TEXT DEFAULT 'user',
+  createdAt TEXT
+);
 `);
 
 export default db;

@@ -11,6 +11,9 @@ import { streamMedia } from '../controllers/stream.controller.js';
 import { runIndex } from '../controllers/index.controller.js';
 import { validate } from '../middlewares/validate.middleware.js';
 import { historySchema } from '../validators/history.validator.js';
+import * as authController from '../controllers/auth.controller.js';
+import { protect, authorize } from '../middlewares/auth.middleware.js';
+
 
 
 /* ================================
@@ -44,17 +47,49 @@ router.get('/stream/:id', streamMedia);
 ================================ */
 
 // router.post('/history', browseController.saveHistory);
+// router.post(
+//   '/history',
+//   validate(historySchema),
+//   browseController.saveHistory
+// );
+
+// router.get('/history', browseController.getHistory);
+
 router.post(
   '/history',
+  protect,
   validate(historySchema),
   browseController.saveHistory
 );
-router.get('/history', browseController.getHistory);
+
+
+router.get(
+  '/history',
+  protect,
+  browseController.getHistory
+);
+
+
 
 /* ================================
    INDEXACIÓN
 ================================ */
 
-router.post('/index', runIndex);
+//router.post('/index', runIndex);
+router.post(
+  '/index',
+  protect,
+  authorize(['admin']),
+  runIndex
+);
+
+/* ================================
+   AUTH
+================================ */
+
+router.post('/auth/register', authController.register);
+router.post('/auth/login', authController.login);
+
+
 
 export default router;
