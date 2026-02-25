@@ -13,7 +13,7 @@ import { validate } from '../middlewares/validate.middleware.js';
 import { historySchema } from '../validators/history.validator.js';
 import * as authController from '../controllers/auth.controller.js';
 import { protect, authorize } from '../middlewares/auth.middleware.js';
-
+import * as profileController from '../controllers/profile.controller.js';
 
 
 /* ================================
@@ -83,6 +83,7 @@ router.post(
   runIndex
 );
 
+
 /* ================================
    AUTH
 ================================ */
@@ -90,6 +91,27 @@ router.post(
 router.post('/auth/register', authController.register);
 router.post('/auth/login', authController.login);
 
+/* ================================
+   PROFILES
+================================ */
+
+router.post(
+  '/profiles',
+  protect,
+  profileController.create
+);
+
+router.get(
+  '/profiles',
+  protect,
+  profileController.list
+);
+
+router.delete(
+  '/profiles/:id',
+  protect,
+  profileController.remove
+);
 
 
 export default router;

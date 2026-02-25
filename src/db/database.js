@@ -44,10 +44,12 @@ CREATE TABLE IF NOT EXISTS media (
 
 CREATE TABLE IF NOT EXISTS history (
   id TEXT PRIMARY KEY,
+  profileId TEXT,
   mediaId TEXT,
   progress INTEGER,
   duration INTEGER,
-  updatedAt TEXT
+  updatedAt TEXT,
+  FOREIGN KEY(profileId) REFERENCES profiles(id)
 );
 
 CREATE TABLE IF NOT EXISTS users (
@@ -56,6 +58,16 @@ CREATE TABLE IF NOT EXISTS users (
   password TEXT,
   role TEXT DEFAULT 'user',
   createdAt TEXT
+);
+
+CREATE TABLE IF NOT EXISTS profiles (
+  id TEXT PRIMARY KEY,
+  userId TEXT,
+  name TEXT,
+  avatar TEXT,
+  isChild INTEGER DEFAULT 0,
+  createdAt TEXT,
+  FOREIGN KEY(userId) REFERENCES users(id)
 );
 `);
 

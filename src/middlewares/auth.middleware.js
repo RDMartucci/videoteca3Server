@@ -25,13 +25,36 @@ export const protect = (req, res, next) => {
   }
 };
 
-export const authorize = (roles = []) => {
+// export const authorize = (roles = []) => {
+//   return (req, res, next) => {
+//     if (!roles.includes(req.user.role)) {
+//       const error = new Error("No tiene permisos");
+//       error.status = 403;
+//       return next(error);
+//     }
+//     next();
+//   };
+// };
+
+export const authorize = (...allowedRoles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      const error = new Error("No tiene permisos");
+
+    if (!req.user) {
+      const error = new Error("No autenticado");
+      error.status = 401;
+      return next(error);
+    }
+
+    if (!allowedRoles.includes(req.user.role)) {
+      const error = new Error("No tiene permisos suficientes");
       error.status = 403;
       return next(error);
     }
+
     next();
   };
 };
+
+
+
+
