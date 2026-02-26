@@ -66,9 +66,10 @@ CREATE TABLE IF NOT EXISTS profiles (
   name TEXT,
   avatar TEXT,
   isChild INTEGER DEFAULT 0,
+  isDefault INTEGER DEFAULT 0,
   createdAt TEXT,
   FOREIGN KEY(userId) REFERENCES users(id)
-);
+);  
 `);
 
 export default db;

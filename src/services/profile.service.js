@@ -20,6 +20,25 @@ export const createProfile = ({ userId, name, avatar, isChild }) => {
   return { id, name, avatar, isChild };
 };
 
+// export const createProfile = ({ userId, name, avatar, isChild }) => {
+
+//   const id = uuidv4();
+
+//   db.prepare(`
+//     INSERT INTO profiles (id, userId, name, avatar, isChild, createdAt)
+//     VALUES (?, ?, ?, ?, ?, ?)
+//   `).run(
+//     id,
+//     userId,
+//     name,
+//     avatar || null,
+//     isChild ? 1 : 0,
+//     new Date().toISOString()
+//   );
+
+//   return { id, name, avatar, isChild };
+// };
+
 export const getProfilesByUser = (userId) => {
 
   return db.prepare(`

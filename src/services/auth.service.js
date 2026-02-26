@@ -18,21 +18,58 @@ export const registerUser = async ({ username, password, role = "user" }) => {
     throw error;
   }
 
+  const userId = uuidv4();
   const hashedPassword = await bcrypt.hash(password, 10);
 
   db.prepare(`
     INSERT INTO users (id, username, password, role, createdAt)
     VALUES (?, ?, ?, ?, ?)
   `).run(
-    uuidv4(),
+    userId,
     username,
     hashedPassword,
     role,
     new Date().toISOString()
   );
 
+  // 🔥 Crear perfil default automáticamente
+  db.prepare(`
+    INSERT INTO profiles (id, userId, name, isDefault, createdAt)
+    VALUES (?, ?, ?, ?, ?)
+  `).run(
+    uuidv4(),
+    userId,
+    username,
+    1,
+    new Date().toISOString()
+  );
+
   return { username, role };
 };
+// export const registerUser = async ({ username, password, role = "user" }) => {
+
+//   const existing = db.prepare("SELECT * FROM users WHERE username = ?").get(username);
+//   if (existing) {
+//     const error = new Error("Usuario ya existe");
+//     error.status = 400;
+//     throw error;
+//   }
+
+//   const hashedPassword = await bcrypt.hash(password, 10);
+
+//   db.prepare(`
+//     INSERT INTO users (id, username, password, role, createdAt)
+//     VALUES (?, ?, ?, ?, ?)
+//   `).run(
+//     uuidv4(),
+//     username,
+//     hashedPassword,
+//     role,
+//     new Date().toISOString()
+//   );
+
+//   return { username, role };
+// };
 
 /**
  * Login usuario

@@ -1,5 +1,6 @@
 import { asyncHandler } from '../utils/asyncHandler.js';
 import * as profileService from '../services/profile.service.js';
+import db from '../db/database.js';
 
 export const create = asyncHandler(async (req, res) => {
 
@@ -43,3 +44,19 @@ export const remove = asyncHandler(async (req, res) => {
     message: "Perfil eliminado"
   });
 });
+
+export const getDefaultProfile = asyncHandler(async (req, res) => {
+
+  const profile = db.prepare(`
+    SELECT id, name, avatar, isChild
+    FROM profiles
+    WHERE userId = ? AND isDefault = 1
+  `).get(req.user.id);
+
+  res.json({
+    success: true,
+    profile
+  });
+});
+
+

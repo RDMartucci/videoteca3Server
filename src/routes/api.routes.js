@@ -43,7 +43,6 @@ router.get(
   browseController.getHistory
 );
 
-
 /* ================================
    PROFILES
 ================================ */
@@ -51,6 +50,16 @@ router.get(
 router.post('/profiles', protect, profileController.create);
 router.get('/profiles', protect, profileController.list);
 router.delete('/profiles/:id', protect, profileController.remove);
+/* ================================
+   crea PROFILE x defecto al registrar usuario
+================================ */
+
+router.get(
+  '/profiles/default',
+  protect,
+  profileController.getDefaultProfile
+);
+
 
 /* ================================
    INDEX (solo admin)
