@@ -1,3 +1,5 @@
+// controllers/index.controller.js
+
 import { buildIndex } from '../services/indexer.service.js';
 
 export const runIndex = async (req, res) => {

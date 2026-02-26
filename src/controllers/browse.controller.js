@@ -1,4 +1,8 @@
 // // src/controllers/browse.controller.js
+//
+// Controlador para navegación y detalles de media
+// Maneja también el historial de visualización por perfil
+//
 
 import db from '../db/database.js';
 import { asyncHandler } from '../utils/asyncHandler.js';

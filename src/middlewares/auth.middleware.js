@@ -1,3 +1,5 @@
+// auth.middleware.js
+
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || "super_secret_key";
@@ -16,25 +18,17 @@ export const protect = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
+
+    // 🔥 Esto es clave
     req.user = decoded;
+
     next();
-  } catch {
+  } catch (err) {
     const error = new Error("Token inválido");
     error.status = 401;
     next(error);
   }
 };
-
-// export const authorize = (roles = []) => {
-//   return (req, res, next) => {
-//     if (!roles.includes(req.user.role)) {
-//       const error = new Error("No tiene permisos");
-//       error.status = 403;
-//       return next(error);
-//     }
-//     next();
-//   };
-// };
 
 export const authorize = (...allowedRoles) => {
   return (req, res, next) => {
@@ -43,6 +37,11 @@ export const authorize = (...allowedRoles) => {
       const error = new Error("No autenticado");
       error.status = 401;
       return next(error);
+    }
+
+    // Soporta authorize('admin') o authorize(['admin'])
+    if (Array.isArray(allowedRoles[0])) {
+      allowedRoles = allowedRoles[0];
     }
 
     if (!allowedRoles.includes(req.user.role)) {
@@ -54,7 +53,4 @@ export const authorize = (...allowedRoles) => {
     next();
   };
 };
-
-
-
 
