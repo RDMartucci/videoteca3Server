@@ -6,8 +6,9 @@ import * as browseController from '../controllers/browse.controller.js';
 import * as authController from '../controllers/auth.controller.js';
 import * as profileController from '../controllers/profile.controller.js';
 import * as indexController from '../controllers/index.controller.js';;
-
 import { protect, authorize } from '../middlewares/auth.middleware.js';
+import { attachProfile } from '../middlewares/profile.middleware.js';
+
 
 const router = express.Router();
 
@@ -28,9 +29,20 @@ router.get('/media/:id', browseController.getMediaById);
 /* ================================
    HISTORY (protegido)
 ================================ */
+router.post(
+  '/history',
+  protect,
+  attachProfile,
+  browseController.saveHistory
+);
 
-router.post('/history', protect, browseController.saveHistory);
-router.get('/history', protect, browseController.getHistory);
+router.get(
+  '/history',
+  protect,
+  attachProfile,
+  browseController.getHistory
+);
+
 
 /* ================================
    PROFILES

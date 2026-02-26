@@ -62,16 +62,9 @@ export const getMediaById = asyncHandler(async (req, res) => {
 /* =========================================
    HISTORY (por perfil)
 ========================================= */
-
 export const saveHistory = asyncHandler(async (req, res) => {
 
-  const { profileId, mediaId, progress, duration } = req.body;
-
-  if (!profileId) {
-    const error = new Error("profileId es requerido");
-    error.status = 400;
-    throw error;
-  }
+  const { mediaId, progress, duration } = req.body;
 
   if (!mediaId) {
     const error = new Error("mediaId es requerido");
@@ -85,22 +78,10 @@ export const saveHistory = asyncHandler(async (req, res) => {
     throw error;
   }
 
-  // verificar perfil pertenece al usuario autenticado
-  const profile = db.prepare(`
-    SELECT * FROM profiles
-    WHERE id = ? AND userId = ?
-  `).get(profileId, req.user.id);
-
-  if (!profile) {
-    const error = new Error("Perfil inválido");
-    error.status = 403;
-    throw error;
-  }
-
   const existing = db.prepare(`
     SELECT * FROM history
     WHERE profileId = ? AND mediaId = ?
-  `).get(profileId, mediaId);
+  `).get(req.profile.id, mediaId);
 
   if (existing) {
     db.prepare(`
@@ -118,8 +99,8 @@ export const saveHistory = asyncHandler(async (req, res) => {
       INSERT INTO history (id, profileId, mediaId, progress, duration, updatedAt)
       VALUES (?, ?, ?, ?, ?, ?)
     `).run(
-      uuidv4(),
-      profileId,
+      crypto.randomUUID(),
+      req.profile.id,
       mediaId,
       progress,
       duration,
@@ -133,30 +114,80 @@ export const saveHistory = asyncHandler(async (req, res) => {
   });
 });
 
+// export const saveHistory = asyncHandler(async (req, res) => {
+
+//   const { profileId, mediaId, progress, duration } = req.body;
+
+//   if (!profileId) {
+//     const error = new Error("profileId es requerido");
+//     error.status = 400;
+//     throw error;
+//   }
+
+//   if (!mediaId) {
+//     const error = new Error("mediaId es requerido");
+//     error.status = 400;
+//     throw error;
+//   }
+
+//   if (progress == null || duration == null) {
+//     const error = new Error("progress y duration son requeridos");
+//     error.status = 400;
+//     throw error;
+//   }
+
+//   // verificar perfil pertenece al usuario autenticado
+//   const profile = db.prepare(`
+//     SELECT * FROM profiles
+//     WHERE id = ? AND userId = ?
+//   `).get(profileId, req.user.id);
+
+//   if (!profile) {
+//     const error = new Error("Perfil inválido");
+//     error.status = 403;
+//     throw error;
+//   }
+
+//   const existing = db.prepare(`
+//     SELECT * FROM history
+//     WHERE profileId = ? AND mediaId = ?
+//   `).get(profileId, mediaId);
+
+//   if (existing) {
+//     db.prepare(`
+//       UPDATE history
+//       SET progress = ?, duration = ?, updatedAt = ?
+//       WHERE id = ?
+//     `).run(
+//       progress,
+//       duration,
+//       new Date().toISOString(),
+//       existing.id
+//     );
+//   } else {
+//     db.prepare(`
+//       INSERT INTO history (id, profileId, mediaId, progress, duration, updatedAt)
+//       VALUES (?, ?, ?, ?, ?, ?)
+//     `).run(
+//       uuidv4(),
+//       profileId,
+//       mediaId,
+//       progress,
+//       duration,
+//       new Date().toISOString()
+//     );
+//   }
+
+//   res.json({
+//     success: true,
+//     message: "Historial actualizado"
+//   });
+// });
+
 /* =========================================
    GET HISTORY (Continue Watching)
 ========================================= */
-
 export const getHistory = asyncHandler(async (req, res) => {
-
-  const { profileId } = req.query;
-
-  if (!profileId) {
-    const error = new Error("profileId es requerido");
-    error.status = 400;
-    throw error;
-  }
-
-  const profile = db.prepare(`
-    SELECT * FROM profiles
-    WHERE id = ? AND userId = ?
-  `).get(profileId, req.user.id);
-
-  if (!profile) {
-    const error = new Error("Perfil inválido");
-    error.status = 403;
-    throw error;
-  }
 
   const history = db.prepare(`
     SELECT h.*, m.name, m.poster
@@ -164,13 +195,48 @@ export const getHistory = asyncHandler(async (req, res) => {
     JOIN media m ON h.mediaId = m.id
     WHERE h.profileId = ?
     ORDER BY h.updatedAt DESC
-  `).all(profileId);
+  `).all(req.profile.id);
 
   res.json({
     success: true,
     results: history
   });
 });
+
+// export const getHistory = asyncHandler(async (req, res) => {
+
+//   const { profileId } = req.query;
+
+//   if (!profileId) {
+//     const error = new Error("profileId es requerido");
+//     error.status = 400;
+//     throw error;
+//   }
+
+//   const profile = db.prepare(`
+//     SELECT * FROM profiles
+//     WHERE id = ? AND userId = ?
+//   `).get(profileId, req.user.id);
+
+//   if (!profile) {
+//     const error = new Error("Perfil inválido");
+//     error.status = 403;
+//     throw error;
+//   }
+
+//   const history = db.prepare(`
+//     SELECT h.*, m.name, m.poster
+//     FROM history h
+//     JOIN media m ON h.mediaId = m.id
+//     WHERE h.profileId = ?
+//     ORDER BY h.updatedAt DESC
+//   `).all(profileId);
+
+//   res.json({
+//     success: true,
+//     results: history
+//   });
+// });
 
 
 
