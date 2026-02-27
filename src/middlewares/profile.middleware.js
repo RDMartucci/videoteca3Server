@@ -1,3 +1,11 @@
+// profile.middleware.js
+// Middleware para adjuntar el perfil activo a la solicitud.
+// 🔥 Este middleware es esencial para que las rutas puedan acceder al perfil activo del usuario autenticado.
+// Requiere que el usuario esté autenticado y que se envíe el ID del perfil en el header X-Profile-ID.
+// Requiere el paquete better-sqlite3 para acceder a la base de datos SQLite.
+// Requiere que el middleware de autenticación se ejecute antes para tener acceso a req.user.
+//
+
 import db from '../db/database.js';
 
 export const attachProfile = (req, res, next) => {

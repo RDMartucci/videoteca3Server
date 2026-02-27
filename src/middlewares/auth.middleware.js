@@ -1,4 +1,10 @@
 // auth.middleware.js
+//
+// Middleware de autenticación y autorización para proteger rutas y verificar roles de usuario.
+// 🔥 Este middleware es fundamental para asegurar que solo usuarios autenticados y autorizados 
+// puedan acceder a ciertas rutas.
+// Requiere el paquete jsonwebtoken para verificar tokens JWT.
+//
 
 import jwt from 'jsonwebtoken';
 

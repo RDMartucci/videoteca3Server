@@ -1,3 +1,10 @@
+// controllers/auth.controller.js
+//
+// Controlador para manejar las rutas de autenticación (registro y login).
+// Este controlador se encarga de recibir las solicitudes, validar los datos y 
+// llamar a los servicios correspondientes.
+//
+
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { registerUser, loginUser } from '../services/auth.service.js';
 

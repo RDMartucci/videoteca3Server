@@ -1,9 +1,14 @@
 // controllers/explorer.controller.js
 //
-// Este controlador maneja la lógica para explorar carpetas y listar su contenido, 
-//  así como para listar las unidades de disco en Windows.
+// Controlador para la exploración de carpetas en el sistema de archivos.
+// Este controlador maneja las solicitudes relacionadas con la exploración de carpetas,
+// incluyendo la obtención de la lista de carpetas en una ruta dada, y la gestión de rutas
+// para el acceso rápido (quick access) en la interfaz de usuario.
+// Importamos módulos necesarios para manejar el sistema de archivos, rutas y obtener información 
+// de los discos.
+// Además, utilizamos un módulo para obtener información de los discos en Windows y un logger 
+// para registrar errores y eventos importantes.
 //
-/***************************************************************************************** */
 
 import fs from 'fs/promises';
 import path from 'path';

@@ -1,7 +1,8 @@
-// // src/controllers/browse.controller.js
+// src/controllers/browse.controller.js
 //
-// Controlador para navegación y detalles de media
-// Maneja también el historial de visualización por perfil
+// Controlador para manejar las rutas de exploración, detalles de media e historial.
+// Este controlador se encarga de recibir las solicitudes, validar los datos y 
+// llamar a los servicios correspondientes.
 //
 
 import db from '../db/database.js';

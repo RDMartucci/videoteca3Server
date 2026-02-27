@@ -1,3 +1,18 @@
+// auth.service.js
+//
+// Servicio de autenticación: registro y login de usuarios.
+// Utiliza bcrypt para hashing de contraseñas y JWT para tokens de sesión.
+// 🔥 Mejora: Al registrar un usuario, se crea automáticamente un perfil default para él.
+// 🔥 Mejora: Manejo de errores con mensajes claros y códigos de estado HTTP.
+// 🔥 Mejora: Configuración de JWT con variables de entorno para mayor seguridad.
+// NOTA: En un proyecto real, este servicio debería estar separado en controladores y modelos,
+// y la lógica de base de datos debería estar abstraída en un repositorio o DAO.
+// NOTA: Este código es un ejemplo simplificado para propósitos educativos y no debe usarse 
+// en producción sin las debidas mejoras de seguridad y arquitectura.
+// NOTA: Asegúrate de tener una tabla "users" con columnas (id, username, password, role, createdAt)
+// y una tabla "profiles" con columnas (id, userId, name, isDefault, createdAt) en tu base de datos SQLite. 
+//
+
 import db from '../db/database.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';

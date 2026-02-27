@@ -1,11 +1,11 @@
 //./src/controllers/config.controller.js
 //
-// Controlador para la gestión de configuración y navegación de carpetas.
-// Importa funciones para obtener y guardar rutas de la biblioteca, y para construir el índice.
-// También utiliza módulos de Node.js para manejar el sistema de archivos y ejecutar comandos del 
-// sistema.
-/************************************************************************************************ */
-
+// Controlador para la gestión de configuración, incluyendo el navegador de carpetas 
+// y la gestión de rutas de la biblioteca.
+// Este controlador maneja las solicitudes relacionadas con la configuración de la aplicación,
+// como listar directorios para seleccionar rutas de la biblioteca y guardar esas rutas.
+//
+    
 import { getLibraryPaths, saveLibraryPaths } from '../utils/storage.js';
 import { buildIndex } from '../services/indexer.service.js';
 import fs from 'fs/promises';

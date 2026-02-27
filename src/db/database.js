@@ -1,7 +1,10 @@
 // src/db/database.js
+// Este módulo se encarga de configurar y exportar la conexión a la base de datos SQLite 
+// utilizando better-sqlite3.
+// Se asegura de que la base de datos y las tablas necesarias existan, y activa el modo 
+// WAL para mejorar el rendimiento.
 //
-// Inicialización y gestión de SQLite
-//
+
 
 import Database from 'better-sqlite3';
 import path from 'path';

@@ -1,6 +1,8 @@
 // src/routes/explorer.routes.js
-//
-// Rutas para la exploración de carpetas.
+// Este archivo define las rutas relacionadas con la exploración de carpetas en el backend.
+// Importamos express para crear un router y la función exploreFolder del controlador correspondiente.
+// La función exploreFolder se encargará de manejar las solicitudes POST a la ruta '/browse' y 
+// devolverá la estructura de carpetas solicitada por el frontend.
 //
 
 import express from 'express';

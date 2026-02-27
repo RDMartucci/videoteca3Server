@@ -1,8 +1,11 @@
 // src/services/watcher.service.js
 //
-// Servicio para vigilar cambios en las carpetas de películas y re-indexar
-// cuando se añaden o eliminan archivos.
+// Servicio que utiliza Chokidar para vigilar cambios en las rutas de películas
+// y dispara el re-indexado cuando se detectan cambios.
+// Requiere Chokidar para la vigilancia de archivos, el logger para registrar 
+// eventos y el indexer para reconstruir el índice de películas.
 //
+
 
 import chokidar from 'chokidar';
 import logger from '../config/logger.js';

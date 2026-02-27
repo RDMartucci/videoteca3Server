@@ -1,8 +1,12 @@
 // src/app.js
 //
-// Configuración principal de la aplicación Express
-// Incluye middleware, rutas y manejo de errores
+// Configuración principal de la aplicación Express.
+// Importa las rutas, middlewares y configura CORS.
+// Exporta la instancia de Express para ser utilizada en el servidor.
+// Requiere Express para la creación del servidor, CORS para permitir solicitudes desde el frontend,
+// las rutas para manejar las solicitudes API y el middleware de error para gestionar errores globales.
 //
+
 
 import express from 'express';
 import cors from 'cors';

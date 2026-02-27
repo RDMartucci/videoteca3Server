@@ -1,4 +1,15 @@
 // src/services/metadata.service.js
+//
+//este servicio se encarga de obtener metadata de TMDB y actualizar la base de datos 
+// con esa información. Si el medio ya tiene metadata, simplemente devuelve el registro. 
+// Si no, intenta buscarlo en TMDB usando el título limpio y actualiza la base de datos 
+// con los detalles obtenidos. Si ocurre algún error durante el proceso, devuelve el registro 
+// original sin cambios.
+// Requiere una variable de entorno TMDB_TOKEN con un token de acceso válido para la API de TMDB.
+// El servicio utiliza la biblioteca axios para hacer solicitudes HTTP a la API de TMDB 
+// y la biblioteca better-sqlite3 para interactuar con la base de datos SQLite.
+//
+
 
 import db from "../db/database.js";
 import axios from "axios";

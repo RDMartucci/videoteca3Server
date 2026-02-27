@@ -4,8 +4,6 @@
 // Este middleware debe ser registrado después de todas las rutas y otros middlewares.
 //
 
-// src/middlewares/error.middleware.js
-
 export const errorHandler = (err, req, res, next) => {
 
   console.error("🔥 ERROR:", err.message);

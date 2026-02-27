@@ -1,6 +1,14 @@
 // src/controllers/stream.controller.js
 //
-// Streaming profesional con soporte Range (HTML5 compatible)
+// Controlador para manejar la transmisión de medios (streaming) a los clientes.
+// Este controlador se encarga de leer el archivo de medios desde el sistema de archivos
+// y enviarlo al cliente en partes (chunks) para permitir la reproducción continua.
+// Importamos el módulo 'fs' para manejar el sistema de archivos y 'db' para acceder a la 
+// base de datos.
+// El método 'streamMedia' recibe la solicitud del cliente, obtiene el ID del medio a transmitir,
+// verifica que el medio exista en la base de datos, y luego lee el archivo físico para enviarlo
+// al cliente. Si el cliente solicita un rango específico del archivo (para reproducción continua),
+// el controlador maneja esa solicitud y envía solo la parte solicitada.
 //
 
 import fs from "fs";

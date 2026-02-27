@@ -1,4 +1,11 @@
 // src/services/history.service.js
+// Servicio para gestionar el historial de visualización de los usuarios.
+// Este servicio utiliza una base de datos SQLite para almacenar el progreso de visualización
+// de cada medio. La función saveProgress se encarga de guardar o actualizar el progreso 
+// de un medio específico, mientras que getContinueWatching devuelve una lista de medios
+// que el usuario ha comenzado a ver pero no ha terminado, ordenados por la fecha de actualización.
+//
+
 
 import db from "../db/database.js";
 import { v4 as uuidv4 } from "uuid";

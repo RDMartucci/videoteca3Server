@@ -1,4 +1,10 @@
 // src/middlewares/validate.middleware.js
+//
+// Middleware de validación de datos para las rutas.
+// 🔥 Este middleware es esencial para asegurar que los datos enviados en las solicitudes sean válidos y cumplan con los requisitos definidos.
+// Requiere que se defina un esquema de validación para cada ruta que lo utilice.
+// El esquema es un objeto donde cada clave es el nombre del campo a validar y su valor es un objeto con las reglas de validación.
+//
 
 export const validate = (schema) => {
   return (req, res, next) => {

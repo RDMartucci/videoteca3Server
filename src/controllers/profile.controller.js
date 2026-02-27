@@ -1,3 +1,12 @@
+// controllers/profile.controller.js
+//
+// Controlador para manejar las operaciones relacionadas con los perfiles de usuario.
+// Permite crear, listar, eliminar perfiles y obtener el perfil predeterminado.
+// Este controlador utiliza el servicio de perfiles para interactuar con la base de datos 
+// y el middleware de autenticación para asegurar que solo los usuarios autenticados puedan 
+// acceder a estas rutas.
+//
+ 
 import { asyncHandler } from '../utils/asyncHandler.js';
 import * as profileService from '../services/profile.service.js';
 import db from '../db/database.js';

@@ -1,8 +1,20 @@
 // src/services/indexer.service.js
+// este servicio se encarga de escanear las carpetas de la biblioteca, extraer información 
+// de los archivos de video y almacenar esa información en la base de datos. 
+// También se encarga de limpiar los nombres de los archivos para facilitar las búsquedas 
+// y la organización.
+// El proceso de indexación se realiza de la siguiente manera:
+// 1. Se obtienen las rutas de las carpetas de la biblioteca utilizando la función getLibraryPaths().
+// 2. Para cada carpeta, se leen los archivos y se filtran aquellos que son videos basándose en sus extensiones.  
+// 3. Para cada archivo de video, se extrae información relevante como el nombre del archivo, el tamaño, la fecha de creación, etc. 
+// 4. Se limpia el nombre del archivo utilizando la función cleanFileName() para obtener un título más legible.
+// 5. Se almacena toda esta información en la base de datos utilizando una transacción para asegurar la integridad de los datos.
+// 6. Finalmente, se invalida la caché para que las nuevas entradas estén disponibles para las consultas posteriores.
+// Este servicio es fundamental para mantener la biblioteca de medios actualizada y organizada, 
+// permitiendo a los usuarios acceder a su contenido de manera eficiente.
+// Nota: Este servicio asume que la base de datos y las tablas necesarias ya están configuradas correctamente.
 //
-// Servicio de escaneo profesional
-// Solo indexa archivos físicos y los guarda en SQLite
-//
+
 
 import fs from 'fs/promises';
 import path from 'path';

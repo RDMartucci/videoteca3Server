@@ -1,3 +1,16 @@
+// services/profile.service.js
+//
+// Este servicio maneja la lógica de negocio relacionada con los perfiles de usuario.
+// Aquí se implementan funciones para crear, obtener y eliminar perfiles.
+// Cada función interactúa con la base de datos a través de consultas SQL preparadas.
+// La función createProfile recibe los datos necesarios para crear un nuevo perfil, 
+// genera un ID único y lo inserta en la base de datos.
+// La función getProfilesByUser obtiene todos los perfiles asociados a un usuario específico.
+// La función deleteProfile elimina un perfil específico, asegurándose de que el perfil 
+// pertenezca al usuario que realiza la solicitud.
+// Importamos la instancia de la base de datos y la función para generar IDs únicos.
+//
+
 import db from '../db/database.js';
 import { v4 as uuidv4 } from 'uuid';
 
