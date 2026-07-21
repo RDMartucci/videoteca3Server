@@ -1,16 +1,25 @@
-// // src/routes/api.routes.js
+//src/routes/api.routes.js
 
 import express from 'express';
 
 import * as browseController from '../controllers/browse.controller.js';
 import * as authController from '../controllers/auth.controller.js';
 import * as profileController from '../controllers/profile.controller.js';
-import * as indexController from '../controllers/index.controller.js';;
+import * as indexController from '../controllers/index.controller.js';
+import * as configController from '../controllers/config.controller.js';
+import * as metadataController from '../controllers/metadata.controller.js';
+import { streamMedia } from '../controllers/stream.controller.js';
 import { protect, authorize } from '../middlewares/auth.middleware.js';
 import { attachProfile } from '../middlewares/profile.middleware.js';
+import * as healthController from '../controllers/health.controller.js';
 
 
 const router = express.Router();
+
+/*================================
+  HEALTH - SALUD
+ ================================*/
+router.get('/health', healthController.getHealth);
 
 /* ================================
    AUTH
@@ -26,6 +35,14 @@ router.post('/auth/login', authController.login);
 // pero las rutas de historial requieren autenticación.
 router.get('/browse', browseController.browse);
 router.get('/media/:id', browseController.getMediaById);
+router.get('/media/:id/metadata', protect, metadataController.getMediaMetadata);
+router.get('/media/:id/stream', protect, streamMedia);
+
+/* ================================
+   SETTINGS (solo admin)
+================================ */
+router.get('/settings', protect, authorize('admin'), configController.getSettings);
+router.put('/settings', protect, authorize('admin'), configController.saveSettings);
 
 /* ================================
    HISTORY (protegido)

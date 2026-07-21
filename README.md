@@ -112,7 +112,10 @@ npm install
 ```bash
 PORT=5000
 TMDB_TOKEN=TU_TOKEN_DE_TMDB
+JWT_SECRET=una_clave_larga_aleatoria_y_privada
 ```
+
+`JWT_SECRET` es obligatorio y debe ser una clave aleatoria distinta en cada entorno. No debe subirse al repositorio.
 
 3. **Iniciar servidor**
 

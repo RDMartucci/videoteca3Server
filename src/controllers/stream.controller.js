@@ -12,7 +12,18 @@
 //
 
 import fs from "fs";
+import path from "path";
 import db from "../db/database.js";
+
+const MIME_TYPES = {
+  '.avi': 'video/x-msvideo',
+  '.flv': 'video/x-flv',
+  '.mkv': 'video/x-matroska',
+  '.mov': 'video/quicktime',
+  '.mp4': 'video/mp4',
+  '.webm': 'video/webm',
+  '.wmv': 'video/x-ms-wmv'
+};
 
 export const streamMedia = (req, res) => {
   const { id } = req.params;
@@ -31,17 +42,24 @@ export const streamMedia = (req, res) => {
   const stat = fs.statSync(filePath);
   const fileSize = stat.size;
   const range = req.headers.range;
+  const contentType = MIME_TYPES[path.extname(filePath).toLowerCase()] || 'application/octet-stream';
 
   if (!range) {
     res.writeHead(200, {
       "Content-Length": fileSize,
-      "Content-Type": "video/mp4"
+      "Accept-Ranges": "bytes",
+      "Content-Type": contentType
     });
     fs.createReadStream(filePath).pipe(res);
   } else {
-    const parts = range.replace(/bytes=/, "").split("-");
+    const parts = range.replace(/^bytes=/, "").split("-");
     const start = parseInt(parts[0], 10);
-    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+    const end = parts[1] ? Math.min(parseInt(parts[1], 10), fileSize - 1) : fileSize - 1;
+
+    if (!range.startsWith('bytes=') || Number.isNaN(start) || Number.isNaN(end) || start > end || start >= fileSize) {
+      res.writeHead(416, { "Content-Range": `bytes */${fileSize}` });
+      return res.end();
+    }
 
     const chunkSize = end - start + 1;
 
@@ -49,7 +67,7 @@ export const streamMedia = (req, res) => {
       "Content-Range": `bytes ${start}-${end}/${fileSize}`,
       "Accept-Ranges": "bytes",
       "Content-Length": chunkSize,
-      "Content-Type": "video/mp4"
+      "Content-Type": contentType
     });
 
     fs.createReadStream(filePath, { start, end }).pipe(res);

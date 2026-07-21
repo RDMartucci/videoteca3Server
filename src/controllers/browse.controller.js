@@ -20,7 +20,8 @@ export const browse = asyncHandler(async (req, res) => {
   const offset = (page - 1) * limit;
 
   const media = db.prepare(`
-    SELECT *
+    SELECT id, name, cleanTitle, year, type, category, fileSize, poster,
+           backdrop, runtime, rating, hasMetadata, createdAt
     FROM media
     ORDER BY createdAt DESC
     LIMIT ? OFFSET ?
@@ -45,7 +46,9 @@ export const browse = asyncHandler(async (req, res) => {
 export const getMediaById = asyncHandler(async (req, res) => {
 
   const media = db.prepare(`
-    SELECT * FROM media WHERE id = ?
+    SELECT id, name, cleanTitle, year, type, category, fileSize, poster,
+           backdrop, runtime, rating, hasMetadata, createdAt
+    FROM media WHERE id = ?
   `).get(req.params.id);
 
   if (!media) {

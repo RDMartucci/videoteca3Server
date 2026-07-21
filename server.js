@@ -12,6 +12,10 @@ import { startWatcher } from './src/services/watcher.service.js';
 
 const PORT = process.env.PORT || 5000;
 
+if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET es obligatorio. Configuralo en el archivo .env antes de iniciar el servidor.');
+}
+
 async function server() {
     try {
         logger.info("🚀 Iniciando Servidor Videoteca...");

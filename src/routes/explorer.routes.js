@@ -7,11 +7,12 @@
 
 import express from 'express';
 import { exploreFolder } from '../controllers/explorer.controller.js';
+import { protect, authorize } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
 // Definimos la ruta POST que el frontend acaba de llamar
 // router.post('/browse', exploreFolder);
-router.post('/browse', exploreFolder);
+router.post('/browse', protect, authorize('admin'), exploreFolder);
 
 export default router;

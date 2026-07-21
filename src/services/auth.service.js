@@ -18,7 +18,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 
-const JWT_SECRET = process.env.JWT_SECRET || "super_secret_key";
+const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES = "7d";
 
 /**
@@ -85,6 +85,9 @@ export const registerUser = async ({ username, password, role = "user" }) => {
 
 //   return { username, role };
 // };
+
+
+
 
 /**
  * Login usuario
